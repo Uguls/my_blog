@@ -23,6 +23,8 @@ const Login = ({ setIsLoggedIn }) => {
 		axios.post('http://localhost:8081/auth/login', {
 			email: email,
 			password: password,
+		},{
+			withCredentials: true
 		}).then((res) => {
 			if (res.status === 200) {
 				alert('로그인이 완료되었습니다.');

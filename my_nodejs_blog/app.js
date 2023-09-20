@@ -49,6 +49,7 @@ app.use(session({
   cookie: {
     httpOnly: true,
     secure: false,
+    SameSite: 'none',
   },
 }));
 app.use(passport.initialize());
