@@ -30,7 +30,11 @@ const Home = () => {
 				<Container>
 					<Row>
 						<ul>
-							{postlist.map(post => <Postli key={post.id}>{post.title}</Postli>)}
+							{postlist.map(post => (
+								<Postli key={post.id}>
+									<Link to={`/post/${post.id}`}>{post.title}</Link>
+								</Postli>
+							))}
 						</ul>
 					</Row>
 				</Container>

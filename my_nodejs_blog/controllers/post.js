@@ -60,7 +60,10 @@ exports.getPostList = async (req, res) => {
 exports.getPost = async (req, res, next) => {
     const postId = req.params.id;
     try {
-        const post = await Post.findOne({where: {id: postId}});
+        const post = await Post.findOne(
+          {
+              where: {id: postId}
+          });
         res.status(200).send(post);
     } catch (err) {
         console.error(err);

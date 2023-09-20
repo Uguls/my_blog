@@ -1,8 +1,10 @@
 import React, {useState} from 'react';
 import axios from "axios";
 import Button from "react-bootstrap/Button";
+import {useNavigate} from "react-router-dom";
 
-const Auth = () => {
+const Login = ({ setIsLoggedIn }) => {
+	const navigate = useNavigate();
 	const [userinfo, setuserinfo] = useState({
 		email: '',
 		password: '',
@@ -16,17 +18,16 @@ const Auth = () => {
 		});
 	}
 
-	const auth = () => {
-		const {email, password, nick} = userinfo;
+	const login = () => {
+		const {email, password} = userinfo;
 		axios.post('http://localhost:8081/auth/login', {
 			email: email,
 			password: password,
-		}, {
-			withCredentials: true
 		}).then((res) => {
 			if (res.status === 200) {
 				alert('로그인이 완료되었습니다.');
-				window.location ="/";
+				setIsLoggedIn(true);
+				navigate('/');
 			} else {
 				alert('로그인이 실패하였습니다.')
 			}
@@ -42,10 +43,10 @@ const Auth = () => {
 				<input className="inputTitle" placeholder="password" name='password' onChange={getvalue} />
 			</div>
 			<div>
-				<Button variant="secondary" onClick={()=>auth()}>로그인</Button>
+				<Button variant="secondary" onClick={()=>login()}>로그인</Button>
 			</div>
 		</div>
 	)
 }
 
-export default Auth;
+export default Login;
