@@ -11,7 +11,7 @@ const router = express.Router();
 router.get('/detail/:id', isLoggedIn, getPost);
 
 // CREATE
-router.post('/create', isLoggedIn, uploadPost);
+router.post('/create',isLoggedIn ,uploadPost);
 
 // UPDATE
 router.put('/update/:id',isLoggedIn ,updatePost)

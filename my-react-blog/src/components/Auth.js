@@ -25,19 +25,20 @@ const Auth = () => {
 			nick: nick,
 		}).then((res) => {
 			alert('회원가입이 완료되었습니다.');
+			window.location = "/";
 		});
 	};
 
 	return (
 		<div>
 			<div>
-				<input type='text' className="inputTitle" placeholder="Email" name='title' onChange={getvalue} />
+				<input type='text' className="inputTitle" placeholder="Email" name='email' onChange={getvalue} />
 			</div>
 			<div>
-				<input className="inputTitle" placeholder="nickname" name='content' onChange={getvalue} />
+				<input className="inputTitle" placeholder="nickname" name='nick' onChange={getvalue} />
 			</div>
 			<div>
-				<input className="inputTitle" placeholder="password" name='content' onChange={getvalue} />
+				<input className="inputTitle" placeholder="password" name='password' onChange={getvalue} />
 			</div>
 			<div>
 				<Button variant="secondary" onClick={()=>auth()}>회원가입</Button>

@@ -47,7 +47,7 @@ exports.getPostList = async (req, res) => {
     try {
         // posts 테이블에서 id, UserId, createdAt 컬럼 가져오기
         const posts = await Post.findAll({
-            attributes: ['id', 'UserId', 'createdAt', 'content']
+            attributes: ['id', 'UserId', 'createdAt', 'content', 'title']
         });
         res.status(200).send({ posts });
     } catch (error) {

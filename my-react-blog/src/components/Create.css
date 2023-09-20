@@ -3,7 +3,6 @@
     width: 1050px;
     margin: 0 auto;
 }
-
 .inputTitle {
     display: block;
     width: 80%;
@@ -14,11 +13,10 @@
     border: none;
     border-bottom: 1px solid #dbdbdb;
 }
-
-.Inputcontent {
+.inputcontent {
     display: block;
     width: 80%;
-    min-height: 200px;
+    min-height: 500px;
     box-sizing: border-box;
     padding: 10px 20px;
     margin: 0 auto;

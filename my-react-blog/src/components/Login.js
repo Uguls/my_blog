@@ -21,22 +21,25 @@ const Auth = () => {
 		axios.post('http://localhost:8081/auth/login', {
 			email: email,
 			password: password,
+		}, {
+			withCredentials: true
 		}).then((res) => {
-			alert('로그인이 완료되었습니다.');
-			window.location("/")
-		})
-			.catch(() => {
+			if (res.status === 200) {
+				alert('로그인이 완료되었습니다.');
+				window.location ="/";
+			} else {
 				alert('로그인이 실패하였습니다.')
-			});
+			}
+		});
 	};
 
 	return (
 		<div>
 			<div>
-				<input type='text' className="inputTitle" placeholder="Email" name='title' onChange={getvalue} />
+				<input type='text' className="inputTitle" placeholder="Email" name='email' onChange={getvalue} />
 			</div>
 			<div>
-				<input className="inputTitle" placeholder="password" name='content' onChange={getvalue} />
+				<input className="inputTitle" placeholder="password" name='password' onChange={getvalue} />
 			</div>
 			<div>
 				<Button variant="secondary" onClick={()=>auth()}>로그인</Button>

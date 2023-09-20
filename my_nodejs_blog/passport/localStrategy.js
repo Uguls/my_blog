@@ -5,16 +5,16 @@ const bcrypt = require('bcrypt');
 const {User} = require('../models');
 
 module.exports = () => {
-	passport.use(
-		new LocalStrategy(
-			{
+	passport.use(new LocalStrategy({
         // req.body 객체인자 하고 키값이 일치해야 함
 				usernameField: 'email', // req.body.email
 				passwordField: 'password', // req.body.password
 			},
 			async (email, password, done) => {
 				try {
-					const exUser = await User.findOne({where: {email}});
+					const exUser = await User.findOne({
+						where: {email}
+					});
 					if (exUser) {
 						const result = await bcrypt.compare(password, exUser.password);
 						if (result) {

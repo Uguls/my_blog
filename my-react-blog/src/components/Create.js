@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import Button from 'react-bootstrap/Button'
-import styles from './Auth.css'
+import styles from './Create.css'
 import axios from "axios";
 
 const Create = () => {
@@ -23,8 +23,11 @@ const Create = () => {
 		axios.post('http://localhost:8081/posts/create', {
 			title: title,
 			content: content,
+		}, {
+			withCredentials: true
 		}).then(() => {
 			alert('글이 작성되었습니다.');
+			window.location ="/";
 		});
 	};
 
@@ -34,7 +37,7 @@ const Create = () => {
 						<input type='text' className="inputTitle" placeholder="제목을 입력해주세요" name='title' onChange={getvalue} />
 					</div>
 					<div>
-						<input className="Inputcontent" placeholder="내용을 입력해주세요" name='content' onChange={getvalue} />
+						<input className="inputcontent" placeholder="내용을 입력해주세요" name='content' onChange={getvalue} />
 					</div>
 					<div>
 						<Button variant="secondary" onClick={()=>submit()}>글작성</Button>

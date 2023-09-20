@@ -36,6 +36,7 @@ exports.login = (req, res, next) => {
 			return next(authError);
 		}
 		if (!user) {
+			console.log(info.message)
 			return res.status(400).json({ message: info.message });
 		}
 		return req.login(user, (loginError) => {
