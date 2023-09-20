@@ -6,6 +6,7 @@ const Auth = () => {
 	const [userinfo, setuserinfo] = useState({
 		email: '',
 		password: '',
+		nick: '',
 	});
 
 	const getvalue = (e) => {
@@ -18,16 +19,13 @@ const Auth = () => {
 
 	const auth = () => {
 		const {email, password, nick} = userinfo;
-		axios.post('http://localhost:8081/auth/login', {
+		axios.post('http://localhost:8081/auth/join', {
 			email: email,
 			password: password,
+			nick: nick,
 		}).then((res) => {
-			alert('로그인이 완료되었습니다.');
-			window.location("/")
-		})
-			.catch(() => {
-				alert('로그인이 실패하였습니다.')
-			});
+			alert('회원가입이 완료되었습니다.');
+		});
 	};
 
 	return (
@@ -36,10 +34,13 @@ const Auth = () => {
 				<input type='text' className="inputTitle" placeholder="Email" name='title' onChange={getvalue} />
 			</div>
 			<div>
+				<input className="inputTitle" placeholder="nickname" name='content' onChange={getvalue} />
+			</div>
+			<div>
 				<input className="inputTitle" placeholder="password" name='content' onChange={getvalue} />
 			</div>
 			<div>
-				<Button variant="secondary" onClick={()=>auth()}>로그인</Button>
+				<Button variant="secondary" onClick={()=>auth()}>회원가입</Button>
 			</div>
 		</div>
 	)

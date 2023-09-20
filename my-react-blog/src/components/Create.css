@@ -1,0 +1,27 @@
+/* Create.css */
+.container {
+    width: 1050px;
+    margin: 0 auto;
+}
+
+.inputTitle {
+    display: block;
+    width: 80%;
+    box-sizing: border-box;
+    padding: 10px 20px;
+    margin: 0 auto;
+    margin-bottom: 20px;
+    border: none;
+    border-bottom: 1px solid #dbdbdb;
+}
+
+.Inputcontent {
+    display: block;
+    width: 80%;
+    min-height: 200px;
+    box-sizing: border-box;
+    padding: 10px 20px;
+    margin: 0 auto;
+    resize: none;
+    border: none;
+}

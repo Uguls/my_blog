@@ -5,6 +5,8 @@ import Header from "./components/Header";
 import {createGlobalStyle} from "styled-components";
 import {Route, Routes} from "react-router-dom";
 import Create from "./components/Create";
+import Auth from "./components/Auth";
+import Login from "./components/Login";
 
 const GlobalStyle = createGlobalStyle`
 * {padding: 0; margin: 0;}
@@ -23,6 +25,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/create" element={<Create />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/auth" element={<Auth />} />
         </Routes>
       </div>
     </>

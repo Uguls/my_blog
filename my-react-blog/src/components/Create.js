@@ -1,43 +1,7 @@
 import React, {useState} from 'react';
-import styled from 'styled-components';
+import Button from 'react-bootstrap/Button'
+import styles from './Auth.css'
 import axios from "axios";
-
-const Createwrap = styled.div``
-const Container = styled.div`
-    width: 1050px; 
-    margin: 0 auto;
-`;
-const Row = styled.div``;
-
-const Inputtitle = styled.input`
-    display: block; 
-    width: 100%; 
-    box-sizing: border-box; 
-    padding: 10px 20px; 
-    margin-bottom: 20px; 
-    border: none; 
-    border-bottom: 1px solid #dbdbdb;
-`
-const Inputcontent = styled.textarea`
-    display: block; 
-    width: 100%; 
-    min-height: 200px; 
-    box-sizing: border-box; 
-    padding: 10px 20px; 
-    resize: none; 
-    border: none;
-`
-const SubmitBtn = styled.button`
-    display: block; 
-    width: 200px; 
-    height: 50px; 
-    font-size: 16px; 
-    font-weight: bold; 
-    padding: 5px; 
-    margin: 0 auto; 
-    background: #f4f4f4; 
-    border: 2px solid #dbdbdb;
-`
 
 const Create = () => {
 	const [newpost, setNewpost] = useState({
@@ -65,21 +29,17 @@ const Create = () => {
 	};
 
 	return (
-		<Createwrap>
-			<Container>
-				<Row>
+				<div>
 					<div>
-						<Inputtitle type='text' placeholder="제목을 입력해주세요" name='title' onChange={getvalue} />
+						<input type='text' className="inputTitle" placeholder="제목을 입력해주세요" name='title' onChange={getvalue} />
 					</div>
 					<div>
-						<Inputcontent placeholder="내용을 입력해주세요" name='content' onChange={getvalue} />
+						<input className="Inputcontent" placeholder="내용을 입력해주세요" name='content' onChange={getvalue} />
 					</div>
 					<div>
-						<SubmitBtn className="create" onClick={()=>submit()}>글작성</SubmitBtn>
+						<Button variant="secondary" onClick={()=>submit()}>글작성</Button>
 					</div>
-				</Row>
-			</Container>
-		</Createwrap>
+				</div>
 	)
 }
 

@@ -15,7 +15,10 @@ const Home = () => {
 		axios.get('http://localhost:8081/posts/lists')
 			.then((res) => {
 				setPostlist(postlist.concat(res.data.posts));
-			});
+			})
+			.catch(() => {
+				console.log('글 목록 불러오기 실패')
+		});
 }, []);
 
 	return (

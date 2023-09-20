@@ -22,6 +22,8 @@ const Header = () => {
 						<Link to='/'>BLOG</Link>
 					</Logo>
 					<Createlink to='/create'>글쓰기</Createlink>
+					<Createlink to='/login'>로그인</Createlink>
+					<Createlink to='/auth'>회원가입</Createlink>
 				</Row>
 			</Container>
 		</Headerwrap>
