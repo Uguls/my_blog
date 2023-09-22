@@ -17,7 +17,7 @@ services:
       context: ./my-react-blog
       dockerfile: Dockerfile
     ports:
-      - "80:80"
+      - "3000:3000"
     volumes:
       - ./my-react-blog:/usr/src/app
 
@@ -29,7 +29,7 @@ services:
       MYSQL_USER: testuser
       MYSQL_PASSWORD: password
     ports:
-      - "3305:3305"
+      - "3306:3306"
     volumes:
       - mysql-data:/var/lib/mysql
 

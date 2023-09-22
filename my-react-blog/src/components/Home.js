@@ -12,7 +12,7 @@ const Postli = styled.li`padding: 5px 10px; border-bottom: 1px solid #dbdbdb;`
 const Home = () => {
 	const [postlist, setPostlist] = useState([]);
 	useEffect(() => {
-		axios.get('http://localhost:8081/posts/lists', {
+		axios.get('/posts/lists', {
 			withCredentials: true
 		})
 			.then((res) => {

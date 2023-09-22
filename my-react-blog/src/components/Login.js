@@ -20,7 +20,7 @@ const Login = ({ setIsLoggedIn }) => {
 
 	const login = () => {
 		const {email, password} = userinfo;
-		axios.post('http://localhost:8081/auth/login', {
+		axios.post('/auth/login', {
 			email: email,
 			password: password,
 		},{
