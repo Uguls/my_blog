@@ -16,7 +16,7 @@ RUN npm install
 COPY . .
 
 # 백엔드 서버가 사용할 포트 설정 (예: 8081)
-EXPOSE 8081
+EXPOSE 8080
 
 # 서버 실행
 CMD ["npm", "start"]

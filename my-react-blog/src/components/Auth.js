@@ -19,7 +19,7 @@ const Auth = () => {
 
 	const auth = () => {
 		const {email, password, nick} = userinfo;
-		axios.post('/auth/join', {
+		axios.post('http://localhost:3000/api/auth/join', {
 			email: email,
 			password: password,
 			nick: nick,

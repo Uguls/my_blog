@@ -20,7 +20,7 @@ const Create = () => {
 
 	const submit = () => {
 		const {title, content} = newpost;
-		axios.post('/posts/create', {
+		axios.post('http://localhost:3000/api/posts/create', {
 			title: title,
 			content: content,
 		}, {

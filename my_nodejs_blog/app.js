@@ -18,7 +18,7 @@ const passportConfig = require('./passport');
 
 const app = express();
 passportConfig(); // 패스포트 설정
-app.set('port', process.env.PORT || 8081);
+app.set('port', process.env.PORT || 8080);
 app.set('view engine', 'html');
 nunjucks.configure('views', {
   express: app,
@@ -55,10 +55,10 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use('/', pageRouter);
-app.use('/auth', authRouter);
-app.use('/posts', postsRouter);
-app.use('/comments', commentsRouter);
+app.use('/api/', pageRouter);
+app.use('/api/auth', authRouter);
+app.use('/api/posts', postsRouter);
+app.use('/api/comments', commentsRouter);
 
 
 app.use((req, res, next) => {

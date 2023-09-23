@@ -20,7 +20,7 @@ const Login = ({ setIsLoggedIn }) => {
 
 	const login = () => {
 		const {email, password} = userinfo;
-		axios.post('/auth/login', {
+		axios.post('http://localhost:3000/api/auth/login', {
 			email: email,
 			password: password,
 		},{

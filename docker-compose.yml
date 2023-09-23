@@ -1,26 +1,6 @@
 version: '3'
 
 services:
-  backend:
-    build:
-      context: ./my_nodejs_blog
-      dockerfile: Dockerfile
-    ports:
-      - "8081:8081"
-    volumes:
-      - ./my_nodejs_blog:/usr/src/app
-    environment:
-      - NODE_ENV=development
-
-  frontend:
-    build:
-      context: ./my-react-blog
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./my-react-blog:/usr/src/app
-
   mysql:
     image: mysql:5.7
     environment:
@@ -30,8 +10,40 @@ services:
       MYSQL_PASSWORD: password
     ports:
       - "3306:3306"
+    container_name: myweb-database
     volumes:
       - mysql-data:/var/lib/mysql
+
+  backend:
+    build:
+      context: ./my_nodejs_blog
+      dockerfile: Dockerfile
+    volumes:
+      - ./my_nodejs_blog:/usr/src/app
+    environment:
+      - NODE_ENV=development
+    container_name: myweb-api
+    depends_on:
+      - mysql
+
+  frontend:
+    build:
+      context: ./my-react-blog
+      dockerfile: Dockerfile
+    container_name: myweb-web
+    volumes:
+      - ./my-react-blog:/usr/src/app
+
+  nginx:
+    image: nginx:1.15.2
+    ports:
+      - "3000:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    container_name: myweb-proxy
+    depends_on:
+      - backend
+      - frontend
 
 volumes:
   mysql-data:
