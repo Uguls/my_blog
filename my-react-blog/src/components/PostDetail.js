@@ -24,7 +24,7 @@ const PostDetail = () => {
 	const [postDetail, setPostDetail] = useState([]);
 
 	useEffect(() => {
-		axios.get(`http://localhost:8081/posts/detail/${postId}`, {
+		axios.get(`http://localhost:3000/posts/detail/${postId}`, {
 			withCredentials: true
 		})
 			.then((res) => {
