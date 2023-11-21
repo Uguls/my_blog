@@ -1,4 +1,4 @@
-# my_nodejs_blog/Dockerfile
+# my_back/Dockerfile
 
 # Node.js 이미지를 기반으로 합니다.
 FROM node:14.20.1

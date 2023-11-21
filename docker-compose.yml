@@ -16,10 +16,10 @@ services:
 
   backend:
     build:
-      context: ./my_nodejs_blog
+      context: my_back
       dockerfile: Dockerfile
     volumes:
-      - ./my_nodejs_blog:/usr/src/app
+      - ./my_back:/usr/src/app
     environment:
       - NODE_ENV=development
     container_name: myweb-api
@@ -28,22 +28,11 @@ services:
 
   frontend:
     build:
-      context: ./my-react-blog
+      context: my_front
       dockerfile: Dockerfile
     container_name: myweb-web
     volumes:
-      - ./my-react-blog:/usr/src/app
-
-  nginx:
-    image: nginx:1.15.2
-    ports:
-      - "3000:80"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-    container_name: myweb-proxy
-    depends_on:
-      - backend
-      - frontend
+      - ./my_front:/usr/src/app
 
 volumes:
   mysql-data:
