@@ -37,17 +37,17 @@ exports.login = (req, res, next) => {
 		}
 		if (!user) {
 			console.log(info.message)
-			return res.status(400).json({ message: info.message });
+			return res.status(500);
 		}
 		return req.login(user, (loginError) => {
 			if (loginError) {
 				console.error(loginError);
-				return res.status(400).json({message: loginError});
+				return res.status(500);
 			}
-			return res.status(200).json(user);
+			return res.status(200);
 		});
 
-	})(req, res, next); // 미들웨어 내의 미들웨어에는 (req, res, next)를 붙입니다.
+	})(req, res, next);
 };
 
 // 로그아웃
@@ -58,7 +58,6 @@ exports.logout = (req, res, next) => {
 		} else {
 			req.session.destroy();
 			res.status(200).redirect('/');
-
 		}
 	});
 };

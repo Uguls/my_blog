@@ -1,14 +1,13 @@
 import React, {useState} from 'react';
 import Button from 'react-bootstrap/Button'
-import styles from './Create.css'
 import axios from "axios";
 
 const Create = () => {
 	const [newpost, setNewpost] = useState({
 		title: '',
 		content: '',
-		id: '123',
 	});
+
 	const getvalue = (e) => {
 		const {name, value} = e.target;
 		setNewpost({
@@ -20,14 +19,25 @@ const Create = () => {
 
 	const submit = () => {
 		const {title, content} = newpost;
+		
+		// 제목이나 내용이 비어있는지 확인
+		if (!title.trim() || !content.trim()) {
+			alert('제목과 내용을 입력해주세요.');
+			return;
+		}
+
 		axios.post('http://localhost:3000/api/posts/create', {
 			title: title,
 			content: content,
 		}, {
 			withCredentials: true
-		}).then(() => {
-			alert('글이 작성되었습니다.');
-			window.location ="/";
+		}).then((res) => {
+			if (res.status === 200){
+				alert('글이 작성되었습니다.');
+				window.location ="/";
+			}
+		}).catch(error => {
+			console.log(error);
 		});
 	};
 

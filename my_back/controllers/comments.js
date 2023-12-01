@@ -11,7 +11,7 @@ exports.uploadComment = async (req, res, next) => {
 		res.status(200).send(comment);
 	} catch (error) {
 		console.error(error);
-		res.status(500).json('댓글 작성 오류');
+		res.status(500);
 		next(error);
 	}
 };

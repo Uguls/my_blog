@@ -3,7 +3,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-const { afterUploadImage, uploadPost, updatePost, getPostList, deletePost, getPost} = require('../controllers/post');
+const { afterUploadImage, uploadPost, updatePost, getPostList, deletePost, getPostList} = require('../controllers/post');
 const { isLoggedIn } = require('../middlewares');
 
 const router = express.Router();
@@ -16,7 +16,7 @@ router.put('/update/:id',isLoggedIn ,updatePost)
 
 // READ
 // 상세페이지
-router.get('/detail/:id', isLoggedIn, getPost);
+router.get('/detail/:id', isLoggedIn, getPostList);
 
 // 전체 글 목록
 router.get('/lists', getPostList);

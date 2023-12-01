@@ -4,7 +4,7 @@ const Sequelize = require('sequelize');
 module.exports = class Comment extends Sequelize.Model {
   static init(sequelize) {
     return super.init({
-      comment: {
+      content: {
         type: Sequelize.STRING(100),
         allowNull: false,
       },

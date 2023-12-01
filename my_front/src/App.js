@@ -8,6 +8,7 @@ import Create from "./components/Create";
 import Auth from "./components/Auth";
 import Login from "./components/Login";
 import PostDetail from "./components/PostDetail";
+import {RecoilRoot} from "recoil";
 
 const GlobalStyle = createGlobalStyle`
 * {padding: 0; margin: 0;}
@@ -21,19 +22,21 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false); // 상태 생성
 
   return (
-    <>
-      <div className="App" >
-        <GlobalStyle />
-        <Header isLoggedIn={isLoggedIn} />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/create" element={<Create />} />
-          <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn}/>} />
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/post/:postId" element={<PostDetail />} />
-        </Routes>
-      </div>
-    </>
+    <RecoilRoot>
+      <>
+        <div className="App">
+          <GlobalStyle/>
+          <Header isLoggedIn={isLoggedIn}/>
+          <Routes>
+            <Route path="/" element={<Home/>}/>
+            <Route path="/create" element={<Create/>}/>
+            <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn}/>}/>
+            <Route path="/auth" element={<Auth/>}/>
+            <Route path="/post/:postId" element={<PostDetail/>}/>
+          </Routes>
+        </div>
+      </>
+    </RecoilRoot>
   );
 }
 

@@ -20,8 +20,7 @@ router.get('/kakao', passport.authenticate('kakao'));
 router.get('/kakao/callback', passport.authenticate('kakao', {
   failureRedirect: '/',
 }), (req, res) => {
-  res.status(401).redirect('/')
-
+  res.status(200).redirect('/')
 });
 
 // GET /auth/google
@@ -32,7 +31,6 @@ router.get(
   passport.authenticate('google', { failureRedirect: '/' }), //? 그리고 passport 로그인 전략에 의해 googleStrategy로 가서 구글계정 정보와 DB를 비교해서 회원가입시키거나 로그인 처리하게 한다.
   (req, res) => {
     res.status(200).redirect('/');
-
   },
 );
 
