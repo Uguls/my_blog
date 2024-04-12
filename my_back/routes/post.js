@@ -3,39 +3,24 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-const { afterUploadImage, uploadPost, updatePost, getPostList, deletePost, getPostList} = require('../controllers/post');
+const { afterUploadImage, uploadPost, updatePost, deletePost, listAllPosts, getPost} = require('../controllers/post');
 const { isLoggedIn } = require('../middlewares');
 
 const router = express.Router();
 
-// CREATE
-router.post('/create',isLoggedIn ,uploadPost);
+/** CREATE **/
+router.post('/create',uploadPost);
 
-// UPDATE
-router.put('/update/:id',isLoggedIn ,updatePost)
-
-// READ
+/** READ **/
 // 상세페이지
-router.get('/detail/:id', isLoggedIn, getPostList);
-
+router.get('/detail/:id', isLoggedIn, getPost);
 // 전체 글 목록
-router.get('/lists', getPostList);
+router.get('/lists', listAllPosts);
 
-// DELETE
-// /posts/delete
-router.delete('/:id', deletePost, isLoggedIn, (req, res) => {
-	res.render('postList');
-});
+/** UPDATE **/
+router.put('/update/:id',isLoggedIn, updatePost)
 
-router.get('/write', isLoggedIn, (req, res) => {
-	res.render('write');
-});
-
-router.delete('/:id', (req, res) => {
-	res.render('postList');
-});
-
-
-
+/** DELETE **/
+router.delete('/delete/:id', isLoggedIn, deletePost);
 
 module.exports = router;

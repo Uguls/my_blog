@@ -1,13 +1,12 @@
 import React, {useState} from 'react';
 import axios from "axios";
 import Button from "react-bootstrap/Button";
-import {useNavigate} from "react-router-dom";
 
-const Login = ({ setIsLoggedIn }) => {
-	const navigate = useNavigate();
+const Auth = () => {
 	const [userinfo, setuserinfo] = useState({
 		email: '',
 		password: '',
+		nick: '',
 	});
 
 	const getvalue = (e) => {
@@ -18,21 +17,15 @@ const Login = ({ setIsLoggedIn }) => {
 		});
 	}
 
-	const login = () => {
-		const {email, password} = userinfo;
-		axios.post('http://localhost:3000/api/auth/login', {
+	const auth = () => {
+		const {email, password, nick} = userinfo;
+		axios.post('http://localhost:8080/api/auth/join', {
 			email: email,
 			password: password,
-		},{
-			withCredentials: true
+			nick: nick,
 		}).then((res) => {
-			if (res.status === 200) {
-				alert('로그인이 완료되었습니다.');
-				setIsLoggedIn(true);
-				navigate('/');
-			} else {
-				alert('로그인이 실패하였습니다.')
-			}
+			alert('회원가입이 완료되었습니다.');
+			window.location = "/";
 		});
 	};
 
@@ -42,13 +35,16 @@ const Login = ({ setIsLoggedIn }) => {
 				<input type='text' className="inputTitle" placeholder="Email" name='email' onChange={getvalue} />
 			</div>
 			<div>
+				<input className="inputTitle" placeholder="nickname" name='nick' onChange={getvalue} />
+			</div>
+			<div>
 				<input className="inputTitle" placeholder="password" name='password' onChange={getvalue} />
 			</div>
 			<div>
-				<Button variant="secondary" onClick={()=>login()}>로그인</Button>
+				<Button variant="secondary" onClick={()=>auth()}>회원가입</Button>
 			</div>
 		</div>
 	)
 }
 
-export default Login;
+export default Auth;

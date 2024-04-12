@@ -26,7 +26,7 @@ const Create = () => {
 			return;
 		}
 
-		axios.post('http://localhost:3000/api/posts/create', {
+		axios.post('http://localhost:8080/api/posts/create', {
 			title: title,
 			content: content,
 		}, {

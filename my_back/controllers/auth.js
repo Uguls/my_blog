@@ -12,7 +12,7 @@ exports.join = async (req, res, next) => {
 	try {
 		const exUser = await User.findOne({ where: { email } });
 		if (exUser) {
-			return res.status(400).json({error: '이미 존재하는 유저'});
+			return res.status(400).json('이미 가입된 이메일입니다.');
 		}
 		const hash = await bcrypt.hash(password, 12);
 		await User.create({
@@ -24,7 +24,7 @@ exports.join = async (req, res, next) => {
 		return res.status(200).json('회원가입 완료');
 	} catch (error) {
 		console.error(error);
-		return next(error);
+		next(error);
 	}
 }
 
@@ -37,16 +37,15 @@ exports.login = (req, res, next) => {
 		}
 		if (!user) {
 			console.log(info.message)
-			return res.status(500);
+			return res.status(401).json(info.message);
 		}
 		return req.login(user, (loginError) => {
 			if (loginError) {
 				console.error(loginError);
-				return res.status(500);
+				return res.status(loginError);
 			}
-			return res.status(200);
+			return res.status(200).json({ message: '로그인 성공', user});
 		});
-
 	})(req, res, next);
 };
 
@@ -61,3 +60,8 @@ exports.logout = (req, res, next) => {
 		}
 	});
 };
+
+exports.test = (req, res, next) => {
+	console.log(req.user);
+	res.status(200).json(req.user);
+}
