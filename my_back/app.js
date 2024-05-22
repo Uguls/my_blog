@@ -58,8 +58,6 @@ app.use(passport.session());
 app.use('/api/', pageRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/posts', postsRouter);
-app.use('/api/comments', commentsRouter);
-
 
 app.use((req, res, next) => {
   const error =  new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
@@ -72,7 +70,6 @@ app.use((err, req, res, next) => {
   res.locals.error = process.env.NODE_ENV !== 'production' ? err : {};
   res.status(err.status || 500);
   console.log(err);
-  res.render('error');
 });
 
 app.listen(app.get('port'), () => {
