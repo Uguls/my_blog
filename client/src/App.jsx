@@ -3,6 +3,7 @@ import Header from "./components/Header";
 import TodoEditor from "./components/TodoEditor";
 import TodoList from "./components/TodoList";
 import {useRef, useState} from "react";
+import Navbar from "./components/Navbar";
 
 const mockTodo = [
   {
@@ -42,6 +43,7 @@ function App() {
 
   return (
     <div className="App">
+      <Navbar />
       <Header />
       <TodoEditor onCreate={onCreate}/>
       <TodoList />

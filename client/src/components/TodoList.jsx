@@ -1,4 +1,4 @@
-import "./TodoList.css";
+import "../styles/TodoList.css";
 import TodoItem from "./TodoItem";
 
 const TodoList = () => {

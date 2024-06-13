@@ -1,4 +1,4 @@
-import "./TodoEditor.css";
+import "../styles/TodoEditor.css";
 import {useState} from "react";
 
 const TodoEditor = ({ onCreate }) => {
