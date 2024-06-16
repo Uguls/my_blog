@@ -1,13 +1,27 @@
-import "../styles/TodoEditor.css";
-import {useState} from "react";
+import "../../styles/Todo/TodoEditor.css";
+import {useState, useRef} from "react";
 
-const TodoEditor = ({ onCreate }) => {
+const Editor = ({ onCreate }) => {
 	const [content, setContent] = useState("");
+	const contentRef = useRef();
+
 	const onChangeContent = (e) => {
 		setContent(e.target.value);
 	}
+
+	const onKeyDown = (e) => {
+		if (e.keyCode === 13) {
+			onSubmit();
+		}
+	}
+
 	const onSubmit = () => {
+		if (content === "") {
+			contentRef.current.focus();
+			return;
+		}
 		onCreate(content);
+		setContent("");
 	};
 
 	return (
@@ -15,7 +29,9 @@ const TodoEditor = ({ onCreate }) => {
 			<h4>새로운 Todo 작성하기</h4>
 			<div className={"editor_wrapper"}>
 				<input
+					ref={contentRef}
 					value={content}
+					onKeyDown={onKeyDown}
 					onChange={onChangeContent}
 					placeholder="새로운 Todo..."
 				/>
@@ -24,4 +40,5 @@ const TodoEditor = ({ onCreate }) => {
 		</div>
 	);
 };
-export default TodoEditor;
+
+export default Editor;

@@ -6,20 +6,20 @@
     border-bottom: 1px solid rgb(240, 240, 240);
 }
 
-.TodoItem .checkbox_col {
+.TodoItem .checkbox {
     width: 20px;
 }
 
-.TodoItem .title_col {
+.TodoItem .content {
     flex: 1;
 }
 
-.TodoItem .date_col {
+.TodoItem .date {
     font-size: 14px;
     color: gray;
 }
 
-.TodoItem .btn_col button {
+.TodoItem .button {
     cursor: pointer;
     color: gray;
     font-size: 14px;
