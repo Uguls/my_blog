@@ -33,7 +33,7 @@ function App() {
 
   return (
     <div className="App">
-      <Navbar />
+      {/*<Navbar />*/}
       <Header />
       <Editor onCreate={onCreate}/>
       <List

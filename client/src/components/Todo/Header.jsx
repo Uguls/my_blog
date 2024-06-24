@@ -1,4 +1,5 @@
 import "../../styles/Todo/Header.css";
+import {memo} from "react"
 
 const Header = () => {
 	return (
@@ -8,4 +9,5 @@ const Header = () => {
 		</div>
 	);
 };
-export default Header;
+
+export default memo(Header);
