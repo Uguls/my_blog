@@ -31,7 +31,6 @@ const List = ({todos, onUpdate, onDelete}) => {
 			return {
 				totalCount,
 				doneCount,
-
 				notDoneCount
 			}
 		}, [todos]);
