@@ -3,7 +3,7 @@ import Header from "./components/Todo/Header";
 import Editor from "./components/Todo/Editor";
 import List from "./components/Todo/List";
 import {useRef, useState} from "react";
-import Navbar from "./components/Todo/Navbar";
+import Navbar from "./components/Navbar";
 
 function App() {
   const [todos, setTodos] = useState([]);
