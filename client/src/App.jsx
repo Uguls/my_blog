@@ -2,8 +2,7 @@ import "./App.css";
 import Header from "./components/Todo/Header";
 import Editor from "./components/Todo/Editor";
 import List from "./components/Todo/List";
-import {useRef, useState} from "react";
-import Navbar from "./components/Navbar";
+import { React, useRef, useState } from "react";
 
 function App() {
   const [todos, setTodos] = useState([]);
@@ -21,10 +20,11 @@ function App() {
   };
 
   const onUpdate = (targetId) => {
-    setTodos(todos.map((todo) => todo.id === targetId
-      ? {...todo, isDone: !todo.isDone}
-      : todo
-    ));
+    setTodos(
+      todos.map((todo) =>
+        todo.id === targetId ? { ...todo, isDone: !todo.isDone } : todo,
+      ),
+    );
   };
 
   const onDelete = (targetId) => {
@@ -35,12 +35,8 @@ function App() {
     <div className="App">
       {/*<Navbar />*/}
       <Header />
-      <Editor onCreate={onCreate}/>
-      <List
-        todos={todos}
-        onUpdate={onUpdate}
-        onDelete={onDelete}
-      />
+      <Editor onCreate={onCreate} />
+      <List todos={todos} onUpdate={onUpdate} onDelete={onDelete} />
     </div>
   );
 }
