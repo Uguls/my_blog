@@ -1,42 +1,89 @@
 import "./App.css";
+import { useCallback, useReducer, useRef } from "react";
 import Header from "./components/Todo/Header";
-import Editor from "./components/Todo/Editor";
-import List from "./components/Todo/List";
-import { React, useRef, useState } from "react";
+import TodoEditor from "./component/Todo/TodoEditor";
+import TodoList from "./component/TOdo/TodoList";
+
+const mockTodo = [
+  {
+    id: 0,
+    isDone: false,
+    content: "React 공부하기",
+    createdDate: new Date().getTime(),
+  },
+  {
+    id: 1,
+    isDone: false,
+    content: "빨래 널기",
+    createdDate: new Date().getTime(),
+  },
+  {
+    id: 2,
+    isDone: false,
+    content: "노래 연습하기",
+    createdDate: new Date().getTime(),
+  },
+];
+
+function reducer(state, action) {
+  switch (action.type) {
+    case "CREATE": {
+      return [action.newItem, ...state];
+    }
+    case "UPDATE": {
+      return state.map((it) =>
+        it.id === action.targetId
+          ? {
+              ...it,
+              isDone: !it.isDone,
+            }
+          : it,
+      );
+    }
+    case "DELETE": {
+      return state.filter((it) => it.id !== action.targetId);
+    }
+    default:
+      return state;
+  }
+}
 
 function App() {
-  const [todos, setTodos] = useState([]);
-  const idRef = useRef(0);
+  const [todo, dispatch] = useReducer(reducer, mockTodo);
+  const idRef = useRef(3);
 
   const onCreate = (content) => {
-    const newTodo = {
-      id: idRef.current++,
-      content: content,
-      isDone: false,
-      createDate: new Date().getTime(),
-    };
-
-    setTodos([newTodo, ...todos]);
+    dispatch({
+      type: "CREATE",
+      newItem: {
+        id: idRef.current,
+        content,
+        isDone: false,
+        createdDate: new Date().getTime(),
+      },
+    });
+    idRef.current += 1;
   };
 
-  const onUpdate = (targetId) => {
-    setTodos(
-      todos.map((todo) =>
-        todo.id === targetId ? { ...todo, isDone: !todo.isDone } : todo,
-      ),
-    );
-  };
+  const onUpdate = useCallback((targetId) => {
+    dispatch({
+      type: "UPDATE",
+      targetId,
+    });
+  }, []);
 
-  const onDelete = (targetId) => {
-    setTodos(todos.filter((todo) => todo.id !== targetId));
-  };
+  const onDelete = useCallback((targetId) => {
+    dispatch({
+      type: "DELETE",
+      targetId,
+    });
+  }, []);
 
   return (
     <div className="App">
-      {/*<Navbar />*/}
       <Header />
-      <Editor onCreate={onCreate} />
-      <List todos={todos} onUpdate={onUpdate} onDelete={onDelete} />
+      <TodoEditor onCreate={onCreate} />
+      <TodoList todo={todo} onUpdate={onUpdate} onDelete={onDelete} />
     </div>
   );
 }
