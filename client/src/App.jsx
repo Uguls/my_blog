@@ -1,5 +1,5 @@
 import "./App.css";
-import { useCallback, useReducer, useRef, createContext } from "react";
+import { useCallback, useReducer, useRef, createContext, useMemo } from "react";
 import Header from "./components/Todo/Header";
 import Editor from "./components/Todo/Editor";
 import List from "./components/Todo/List";
@@ -48,7 +48,8 @@ function reducer(state, action) {
   }
 }
 
-export const TodoContext = createContext();
+export const TodoStateContext = createContext();
+export const TodoDispatchContext = createContext();
 
 function App() {
   const [todos, dispatch] = useReducer(reducer, mockTodo);
@@ -81,20 +82,23 @@ function App() {
     });
   }, []);
 
+  const memoizedDispatch = useMemo(() => {
+    return {
+      onCreate,
+      onUpdate,
+      onDelete,
+    };
+  }, []);
+
   return (
     <div className="App">
       <Header />
-      <TodoContext.Provider
-        value={{
-          todos,
-          onCreate,
-          onUpdate,
-          onDelete,
-        }}
-      >
-        <Editor />
-        <List />
-      </TodoContext.Provider>
+      <TodoStateContext.Provider value={todos}>
+        <TodoDispatchContext.Provider value={memoizedDispatch}>
+          <Editor />
+          <List />
+        </TodoDispatchContext.Provider>
+      </TodoStateContext.Provider>
     </div>
   );
 }
