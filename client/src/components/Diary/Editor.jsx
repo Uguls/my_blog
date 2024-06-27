@@ -1,7 +1,7 @@
 import "./Editor.css";
 import EmotionItem from "./EmotionItem.jsx";
 import Button from "./Button.jsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const emotionList = [
@@ -49,15 +49,25 @@ const getStringedDate = (targetDate) => {
 // 그렇게 하지 않고 Create 나 update함수를 고정적으로 받게 되면 다른 페이지에서 사용할때
 // 곤란한 상황이 생길 수 있다
 // ex) Create함수로 받게 되면 Edit 페이지에서는 update를 해야하는데 create를 하게 됨
-const Editor = ({ onSubmit }) => {
-  const nav = useNavigate();
-
+const Editor = ({ initData, onSubmit }) => {
   // 사용자가 입력한 날짜, emotionId, content를 state로 저장
   const [input, setInput] = useState({
     createdDate: new Date(),
     emotionId: 3,
     content: "",
   });
+
+  const nav = useNavigate();
+
+  useEffect(() => {
+    if (initData) {
+      setInput({
+        ...initData,
+        createdDate: new Date(Number(initData.createdDate)),
+        // Edit컴포넌트에서 timestamp형식으로 createdDate객체를 저장하기때문에 new Date로 바꿔줘야함,
+      });
+    }
+  }, [initData]);
 
   const onChangeInput = (e) => {
     let name = e.target.name;
