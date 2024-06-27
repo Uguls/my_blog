@@ -1,4 +1,4 @@
-import "./Editor.css";
+import "../../styles/Diary/Editor.css";
 import EmotionItem from "./EmotionItem.jsx";
 import Button from "./Button.jsx";
 import { useEffect, useState } from "react";

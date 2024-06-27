@@ -1,4 +1,4 @@
-import "./Button.css";
+import "../../styles/Diary/Button.css";
 
 const Button = ({ text, type, onClick }) => {
   return (
