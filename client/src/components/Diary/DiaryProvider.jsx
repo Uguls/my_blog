@@ -1,40 +1,19 @@
-import { useReducer, useRef, createContext, useEffect, useState } from "react";
-
-function reducer(state, action) {
-  let nextState;
-
-  switch (action.type) {
-    case "INIT": {
-      return action.data;
-    }
-    case "CREATE": {
-      nextState = [action.data, ...state];
-      break;
-    }
-    case "UPDATE": {
-      nextState = state.map((item) =>
-        String(item.id) === String(action.data.id) ? action.data : item,
-      );
-      break;
-    }
-    case "DELETE": {
-      nextState = state.filter((item) => String(item.id) !== String(action.id));
-      break;
-    }
-    default:
-      return state;
-  }
-
-  localStorage.setItem("diary", JSON.stringify(nextState));
-  return nextState;
-}
+import React, { useRef, createContext, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  initDiary,
+  createDiary,
+  updateDiary,
+  deleteDiary,
+} from "../../store/store";
 
 export const DiaryStateContext = createContext();
 export const DiaryDispatchContext = createContext();
 
 export function DiaryProvider({ children }) {
   const [isLoading, setIsLoading] = useState(true);
-  const [data, dispatch] = useReducer(reducer, []);
+  const data = useSelector((state) => state.diary.diary);
+  const dispatch = useDispatch();
   const idRef = useRef(0);
 
   useEffect(() => {
@@ -59,42 +38,34 @@ export function DiaryProvider({ children }) {
 
     idRef.current = maxId + 1;
 
-    dispatch({
-      type: "INIT",
-      data: parsedData,
-    });
+    dispatch(initDiary(parsedData));
     setIsLoading(false);
-  }, []);
+  }, [dispatch]);
 
   const onCreate = (createdDate, emotionId, content) => {
-    dispatch({
-      type: "CREATE",
-      data: {
+    dispatch(
+      createDiary({
         id: idRef.current++,
         createdDate,
         emotionId,
         content,
-      },
-    });
+      }),
+    );
   };
 
   const onUpdate = (id, createdDate, emotionId, content) => {
-    dispatch({
-      type: "UPDATE",
-      data: {
+    dispatch(
+      updateDiary({
         id,
         createdDate,
         emotionId,
         content,
-      },
-    });
+      }),
+    );
   };
 
   const onDelete = (id) => {
-    dispatch({
-      type: "DELETE",
-      id,
-    });
+    dispatch(deleteDiary(id));
   };
 
   if (isLoading) {

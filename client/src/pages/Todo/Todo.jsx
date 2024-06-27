@@ -1,86 +1,84 @@
 import "./../../styles/Todo/Todo.css";
-import { useCallback, useReducer, useRef, createContext, useMemo } from "react";
+import {
+  useCallback,
+  useRef,
+  useEffect,
+  useState,
+  createContext,
+  useMemo,
+} from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Header from "../../components/Todo/Header";
 import Editor from "../../components/Todo/Editor";
 import List from "../../components/Todo/List";
-
-const mockTodo = [
-  {
-    id: 0,
-    isDone: false,
-    content: "React 공부하기",
-    createdDate: new Date().getTime(),
-  },
-  {
-    id: 1,
-    isDone: false,
-    content: "빨래 널기",
-    createdDate: new Date().getTime(),
-  },
-  {
-    id: 2,
-    isDone: false,
-    content: "노래 연습하기",
-    createdDate: new Date().getTime(),
-  },
-];
-
-function reducer(state, action) {
-  switch (action.type) {
-    case "CREATE": {
-      return [action.newItem, ...state];
-    }
-    case "UPDATE": {
-      return state.map((it) =>
-        it.id === action.targetId
-          ? {
-              ...it,
-              isDone: !it.isDone,
-            }
-          : it,
-      );
-    }
-    case "DELETE": {
-      return state.filter((it) => it.id !== action.targetId);
-    }
-    default:
-      return state;
-  }
-}
+import { createTodo, updateTodo, deleteTodo } from "./store";
 
 export const TodoStateContext = createContext();
 export const TodoDispatchContext = createContext();
 
 function Todo() {
-  const [todos, dispatch] = useReducer(reducer, mockTodo);
-  const idRef = useRef(3);
+  const todos = useSelector((state) => state.todo.todos);
+  const dispatch = useDispatch();
+  const idRef = useRef(todos.length);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const storedData = localStorage.getItem("todos");
+    if (!storedData) {
+      setIsLoading(false);
+      return;
+    }
+
+    const parsedData = JSON.parse(storedData);
+    if (!Array.isArray(parsedData)) {
+      setIsLoading(false);
+      return;
+    }
+
+    parsedData.forEach((item) => {
+      if (Number(item.id) >= idRef.current) {
+        idRef.current = Number(item.id) + 1;
+      }
+    });
+
+    dispatch({
+      type: "INIT_TODOS",
+      data: parsedData,
+    });
+    setIsLoading(false);
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (!isLoading) {
+      localStorage.setItem("todos", JSON.stringify(todos));
+    }
+  }, [todos, isLoading]);
 
   const onCreate = (content) => {
-    dispatch({
-      type: "CREATE",
-      newItem: {
+    dispatch(
+      createTodo({
         id: idRef.current,
         content,
         isDone: false,
         createdDate: new Date().getTime(),
-      },
-    });
+      }),
+    );
     idRef.current += 1;
   };
 
-  const onUpdate = useCallback((targetId) => {
-    dispatch({
-      type: "UPDATE",
-      targetId,
-    });
-  }, []);
+  const onUpdate = useCallback(
+    (targetId) => {
+      dispatch(updateTodo(targetId));
+    },
+    [dispatch],
+  );
 
-  const onDelete = useCallback((targetId) => {
-    dispatch({
-      type: "DELETE",
-      targetId,
-    });
-  }, []);
+  const onDelete = useCallback(
+    (targetId) => {
+      dispatch(deleteTodo(targetId));
+    },
+    [dispatch],
+  );
 
   const memoizedDispatch = useMemo(() => {
     return {
@@ -88,7 +86,11 @@ function Todo() {
       onUpdate,
       onDelete,
     };
-  }, []);
+  }, [onCreate, onUpdate, onDelete]);
+
+  if (isLoading) {
+    return <div>데이터 로딩중 ...</div>;
+  }
 
   return (
     <div className="Todo">
