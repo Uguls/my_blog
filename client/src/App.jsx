@@ -1,104 +1,23 @@
 import "./App.css";
-import { useCallback, useReducer, useRef, createContext, useMemo } from "react";
-import Header from "./components/Todo/Header";
-import Editor from "./components/Todo/Editor";
-import List from "./components/Todo/List";
-
-const mockTodo = [
-  {
-    id: 0,
-    isDone: false,
-    content: "React 공부하기",
-    createdDate: new Date().getTime(),
-  },
-  {
-    id: 1,
-    isDone: false,
-    content: "빨래 널기",
-    createdDate: new Date().getTime(),
-  },
-  {
-    id: 2,
-    isDone: false,
-    content: "노래 연습하기",
-    createdDate: new Date().getTime(),
-  },
-];
-
-function reducer(state, action) {
-  switch (action.type) {
-    case "CREATE": {
-      return [action.newItem, ...state];
-    }
-    case "UPDATE": {
-      return state.map((it) =>
-        it.id === action.targetId
-          ? {
-              ...it,
-              isDone: !it.isDone,
-            }
-          : it,
-      );
-    }
-    case "DELETE": {
-      return state.filter((it) => it.id !== action.targetId);
-    }
-    default:
-      return state;
-  }
-}
-
-export const TodoStateContext = createContext();
-export const TodoDispatchContext = createContext();
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Main from "./pages/main";
+import Todo from "./pages/Todo/Todo";
+import DiaryRoutes from "./components/Diary/DiaryRoutes";
+import Login from "./pages/Auth/Login/Login";
+import Register from "./pages/Auth/Register/Register";
+import Notfound from "./pages/Diary/Notfound";
 
 function App() {
-  const [todos, dispatch] = useReducer(reducer, mockTodo);
-  const idRef = useRef(3);
-
-  const onCreate = (content) => {
-    dispatch({
-      type: "CREATE",
-      newItem: {
-        id: idRef.current,
-        content,
-        isDone: false,
-        createdDate: new Date().getTime(),
-      },
-    });
-    idRef.current += 1;
-  };
-
-  const onUpdate = useCallback((targetId) => {
-    dispatch({
-      type: "UPDATE",
-      targetId,
-    });
-  }, []);
-
-  const onDelete = useCallback((targetId) => {
-    dispatch({
-      type: "DELETE",
-      targetId,
-    });
-  }, []);
-
-  const memoizedDispatch = useMemo(() => {
-    return {
-      onCreate,
-      onUpdate,
-      onDelete,
-    };
-  }, []);
-
   return (
     <div className="App">
-      <Header />
-      <TodoStateContext.Provider value={todos}>
-        <TodoDispatchContext.Provider value={memoizedDispatch}>
-          <Editor />
-          <List />
-        </TodoDispatchContext.Provider>
-      </TodoStateContext.Provider>
+      <Routes>
+        <Route path={"/"} element={<Main />} />
+        <Route path={"/todo"} element={<Todo />} />
+        <Route path={"/diary/*"} element={<DiaryRoutes />} />
+        <Route path={"/login"} element={<Login />} />
+        <Route path={"/register"} element={<Register />} />
+        <Route path="*" element={<Notfound />} />
+      </Routes>
     </div>
   );
 }

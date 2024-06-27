@@ -1,6 +1,6 @@
 import "../../styles/Todo/TodoEditor.css";
 import { useState, useRef, useContext } from "react";
-import { TodoDispatchContext } from "../../App";
+import { TodoDispatchContext } from "../../pages/Todo/Todo";
 
 const Editor = () => {
   const { onCreate } = useContext(TodoDispatchContext);

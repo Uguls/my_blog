@@ -1,0 +1,34 @@
+import Header from "../../components/Diary/Header";
+import Button from "../../components/Diary/Button";
+import Editor from "../../components/Diary/Editor";
+
+import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { DiaryDispatchContext } from "../../components/Diary/DiaryProvider";
+
+const New = () => {
+  // Edit페이지가 아닌 New 페이지이기 때문에 onCreate 함수를 useContext를 사용해서 받아옴
+  const { onCreate } = useContext(DiaryDispatchContext);
+
+  const nav = useNavigate();
+
+  // 불러온 onCreate함수에 Editor컴포넌트로부터 전달받은 input state를 인자로 받아
+  // onCreate함수에 인자로 넣는데 createdDate는 timestamp형식이기 때문에 .getTime()작성
+  const onSubmit = (input) => {
+    onCreate(input.createdDate.getTime(), input.emotionId, input.content);
+    nav("/diary", { replace: true });
+  };
+
+  return (
+    <div>
+      <Header
+        title={"새 일기 쓰기"}
+        leftChild={<Button onClick={() => nav(-1)} text={"< 뒤로 가기"} />}
+      />
+      {/*New Editor 컴포넌트로 onSubmit이라는 props명으로 onSubmit 함수 전달*/}
+      <Editor onSubmit={onSubmit} />
+    </div>
+  );
+};
+
+export default New;
