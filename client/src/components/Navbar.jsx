@@ -3,6 +3,7 @@ import {
   Flex,
   Avatar,
   HStack,
+  Link,
   IconButton,
   Button,
   Menu,
@@ -18,7 +19,7 @@ import {
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { Link as RouterLink } from "react-router-dom";
 
-const Links = ["Todo", "Diary", "About", "Contact"];
+const Links = ["Todo", "Projects", "About", "Contact"];
 
 const NavLink = ({ children }) => (
   <ChakraLink
@@ -30,7 +31,7 @@ const NavLink = ({ children }) => (
       textDecoration: "none",
       bg: useColorModeValue("gray.200", "gray.700"),
     }}
-    to={`${children.toLowerCase()}`}
+    href={`${children.toLowerCase()}`}
   >
     {children}
   </ChakraLink>
@@ -81,9 +82,7 @@ export default function Navbar() {
                 <MenuItem>Link 1</MenuItem>
                 <MenuItem>Link 2</MenuItem>
                 <MenuDivider />
-                <MenuItem>
-                  <NavLink>Login</NavLink>
-                </MenuItem>
+                <MenuItem>Link 3</MenuItem>
               </MenuList>
             </Menu>
           </Flex>

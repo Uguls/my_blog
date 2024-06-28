@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { DiaryStateContext } from "../components/Diary/DiaryProvider";
+import { useSelector } from "react-redux";
 
 const useDiary = (id) => {
-  const data = useContext(DiaryStateContext);
+  const data = useSelector((state) => state.diary);
   const [currentDiaryItem, setCurrentDiaryItem] = useState();
   const nav = useNavigate();
 
