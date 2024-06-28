@@ -1,4 +1,4 @@
-import "./Header.css";
+import "../../styles/Diary/Header.css";
 
 const Header = ({ title, leftChild, rightChild }) => {
   return (

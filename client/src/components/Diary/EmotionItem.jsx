@@ -1,4 +1,4 @@
-import "./EmotionItem.css";
+import "../../styles/Diary/EmotionItem.css";
 import { getEmotionImage } from "../../util/get-emotion-images";
 
 const EmotionItem = ({ emotionId, emotionName, isSelected, onClick }) => {

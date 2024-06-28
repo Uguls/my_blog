@@ -13,14 +13,16 @@ import {
   useDisclosure,
   useColorModeValue,
   Stack,
+  Link as ChakraLink,
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
-import { Link } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 
 const Links = ["Todo", "Diary", "About", "Contact"];
 
 const NavLink = ({ children }) => (
-  <Link
+  <ChakraLink
+    as={RouterLink}
     px={2}
     py={1}
     rounded={"md"}
@@ -31,7 +33,7 @@ const NavLink = ({ children }) => (
     to={`${children.toLowerCase()}`}
   >
     {children}
-  </Link>
+  </ChakraLink>
 );
 
 export default function Navbar() {
@@ -50,7 +52,9 @@ export default function Navbar() {
           />
           <HStack spacing={8} alignItems={"center"}>
             <Box>
-              <Link to={"/"}>Uguls</Link>
+              <ChakraLink as={RouterLink} to={"/"}>
+                Uguls
+              </ChakraLink>
             </Box>
             <HStack
               as={"nav"}

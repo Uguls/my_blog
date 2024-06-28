@@ -1,4 +1,4 @@
-import "./Viewer.css";
+import "../../styles/Diary/Viewer.css";
 import { getEmotionImage } from "../../util/get-emotion-images";
 import { emotionList } from "../../util/constants";
 
