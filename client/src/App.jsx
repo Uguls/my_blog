@@ -6,10 +6,12 @@ import DiaryRoutes from "./components/Diary/DiaryRoutes";
 import Login from "./pages/Auth/Login/Login";
 import Register from "./pages/Auth/Register/Register";
 import Notfound from "./pages/Diary/Notfound";
+import Navbar from "./components/Navbar";
 
 function App() {
   return (
     <div className="App">
+      <Navbar />
       <Routes>
         <Route path={"/"} element={<Main />} />
         <Route path={"/todo"} element={<Todo />} />

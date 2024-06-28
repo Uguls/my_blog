@@ -3,7 +3,6 @@ import {
   Flex,
   Avatar,
   HStack,
-  Link,
   IconButton,
   Button,
   Menu,
@@ -14,13 +13,16 @@ import {
   useDisclosure,
   useColorModeValue,
   Stack,
+  Link as ChakraLink,
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
+import { Link as RouterLink } from "react-router-dom";
 
-const Links = ["Todo", "Projects", "About", "Contact"];
+const Links = ["Todo", "Diary", "About", "Contact"];
 
 const NavLink = ({ children }) => (
-  <Link
+  <ChakraLink
+    as={RouterLink}
     px={2}
     py={1}
     rounded={"md"}
@@ -28,10 +30,10 @@ const NavLink = ({ children }) => (
       textDecoration: "none",
       bg: useColorModeValue("gray.200", "gray.700"),
     }}
-    href={`${children.toLowerCase()}`}
+    to={`${children.toLowerCase()}`}
   >
     {children}
-  </Link>
+  </ChakraLink>
 );
 
 export default function Navbar() {
@@ -49,7 +51,11 @@ export default function Navbar() {
             onClick={isOpen ? onClose : onOpen}
           />
           <HStack spacing={8} alignItems={"center"}>
-            <Box>Uguls</Box>
+            <Box>
+              <ChakraLink as={RouterLink} to={"/"}>
+                Uguls
+              </ChakraLink>
+            </Box>
             <HStack
               as={"nav"}
               spacing={4}
@@ -75,7 +81,9 @@ export default function Navbar() {
                 <MenuItem>Link 1</MenuItem>
                 <MenuItem>Link 2</MenuItem>
                 <MenuDivider />
-                <MenuItem>Link 3</MenuItem>
+                <MenuItem>
+                  <NavLink>Login</NavLink>
+                </MenuItem>
               </MenuList>
             </Menu>
           </Flex>

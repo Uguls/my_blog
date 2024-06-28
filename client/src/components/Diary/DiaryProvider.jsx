@@ -1,4 +1,4 @@
-import React, { useRef, createContext, useEffect, useState } from "react";
+import { useReducer, useRef, createContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   initDiary,
@@ -12,7 +12,7 @@ export const DiaryDispatchContext = createContext();
 
 export function DiaryProvider({ children }) {
   const [isLoading, setIsLoading] = useState(true);
-  const data = useSelector((state) => state.diary.diary);
+  const data = useSelector((state) => state.diary);
   const dispatch = useDispatch();
   const idRef = useRef(0);
 

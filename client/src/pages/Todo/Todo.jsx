@@ -1,29 +1,35 @@
 import "./../../styles/Todo/Todo.css";
 import {
   useCallback,
+  useReducer,
   useRef,
-  useEffect,
-  useState,
   createContext,
   useMemo,
+  useEffect,
+  useState,
 } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import {
+  initTodo,
+  createTodo,
+  updateTodo,
+  deleteTodo,
+} from "../../store/store";
 import Header from "../../components/Todo/Header";
 import Editor from "../../components/Todo/Editor";
 import List from "../../components/Todo/List";
-import { createTodo, updateTodo, deleteTodo } from "./store";
+import { useDispatch, useSelector } from "react-redux";
 
 export const TodoStateContext = createContext();
 export const TodoDispatchContext = createContext();
 
 function Todo() {
-  const todos = useSelector((state) => state.todo.todos);
-  const dispatch = useDispatch();
-  const idRef = useRef(todos.length);
   const [isLoading, setIsLoading] = useState(true);
+  const todos = useSelector((state) => state.todo);
+  const dispatch = useDispatch();
+  const idRef = useRef(0);
 
   useEffect(() => {
-    const storedData = localStorage.getItem("todos");
+    const storedData = localStorage.getItem("Todo");
     if (!storedData) {
       setIsLoading(false);
       return;
@@ -35,24 +41,19 @@ function Todo() {
       return;
     }
 
+    let maxId = 0;
     parsedData.forEach((item) => {
-      if (Number(item.id) >= idRef.current) {
-        idRef.current = Number(item.id) + 1;
+      if (Number(item.id) > maxId) {
+        maxId = Number(item.id);
       }
     });
 
-    dispatch({
-      type: "INIT_TODOS",
-      data: parsedData,
-    });
-    setIsLoading(false);
-  }, [dispatch]);
+    idRef.current = maxId + 1;
 
-  useEffect(() => {
-    if (!isLoading) {
-      localStorage.setItem("todos", JSON.stringify(todos));
-    }
-  }, [todos, isLoading]);
+    dispatch(initTodo(parsedData));
+
+    setIsLoading(false);
+  }, []);
 
   const onCreate = (content) => {
     dispatch(
@@ -62,32 +63,17 @@ function Todo() {
         isDone: false,
         createdDate: new Date().getTime(),
       }),
+      (idRef.current += 1),
     );
-    idRef.current += 1;
   };
 
-  const onUpdate = useCallback(
-    (targetId) => {
-      dispatch(updateTodo(targetId));
-    },
-    [dispatch],
-  );
+  const onUpdate = (id) => {
+    dispatch(updateTodo(id));
+  };
 
-  const onDelete = useCallback(
-    (targetId) => {
-      dispatch(deleteTodo(targetId));
-    },
-    [dispatch],
-  );
-
-  const memoizedDispatch = useMemo(() => {
-    return {
-      onCreate,
-      onUpdate,
-      onDelete,
-    };
-  }, [onCreate, onUpdate, onDelete]);
-
+  const onDelete = (id) => {
+    dispatch(deleteTodo(id));
+  };
   if (isLoading) {
     return <div>데이터 로딩중 ...</div>;
   }
@@ -96,7 +82,7 @@ function Todo() {
     <div className="Todo">
       <Header />
       <TodoStateContext.Provider value={todos}>
-        <TodoDispatchContext.Provider value={memoizedDispatch}>
+        <TodoDispatchContext.Provider value={{ onCreate, onUpdate, onDelete }}>
           <Editor />
           <List />
         </TodoDispatchContext.Provider>
