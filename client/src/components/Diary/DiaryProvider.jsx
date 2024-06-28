@@ -40,7 +40,7 @@ export function DiaryProvider({ children }) {
 
     dispatch(initDiary(parsedData));
     setIsLoading(false);
-  }, []);
+  }, [dispatch]);
 
   const onCreate = (createdDate, emotionId, content) => {
     dispatch(

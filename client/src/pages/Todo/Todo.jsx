@@ -74,7 +74,6 @@ function Todo() {
   const onDelete = (id) => {
     dispatch(deleteTodo(id));
   };
-
   if (isLoading) {
     return <div>데이터 로딩중 ...</div>;
   }
