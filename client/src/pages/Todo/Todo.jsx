@@ -1,37 +1,28 @@
 import "./../../styles/Todo/Todo.css";
-import { useCallback, useReducer, useRef, createContext, useMemo } from "react";
+import {
+  useCallback,
+  useReducer,
+  useRef,
+  createContext,
+  useMemo,
+  useEffect,
+} from "react";
 import Header from "../../components/Todo/Header";
 import Editor from "../../components/Todo/Editor";
 import List from "../../components/Todo/List";
 
-const mockTodo = [
-  {
-    id: 0,
-    isDone: false,
-    content: "React 공부하기",
-    createdDate: new Date().getTime(),
-  },
-  {
-    id: 1,
-    isDone: false,
-    content: "빨래 널기",
-    createdDate: new Date().getTime(),
-  },
-  {
-    id: 2,
-    isDone: false,
-    content: "노래 연습하기",
-    createdDate: new Date().getTime(),
-  },
-];
-
 function reducer(state, action) {
+  let nextState;
+
   switch (action.type) {
+    case "INIT":
+      return action.data;
     case "CREATE": {
-      return [action.newItem, ...state];
+      nextState = [action.newItem, ...state];
+      break;
     }
     case "UPDATE": {
-      return state.map((it) =>
+      nextState = state.map((it) =>
         it.id === action.targetId
           ? {
               ...it,
@@ -39,21 +30,57 @@ function reducer(state, action) {
             }
           : it,
       );
+      break;
     }
     case "DELETE": {
-      return state.filter((it) => it.id !== action.targetId);
+      nextState = state.filter((it) => it.id !== action.targetId);
+      break;
     }
     default:
       return state;
   }
+
+  localStorage.setItem("Todo", JSON.stringify(nextState));
+  return nextState;
 }
 
 export const TodoStateContext = createContext();
 export const TodoDispatchContext = createContext();
 
 function Todo() {
-  const [todos, dispatch] = useReducer(reducer, mockTodo);
-  const idRef = useRef(3);
+  const [isLoading, setIsLoading] = useState(true);
+  const [todos, dispatch] = useReducer(reducer, []);
+  const idRef = useRef(0);
+
+  useEffect(() => {
+    const storedData = localStorage.getItem("Todo");
+    if (!storedData) {
+      setIsLoading(false);
+      return;
+    }
+
+    const parsedData = JSON.parse(storedData);
+    if (!Array.isArray(parsedData)) {
+      setIsLoading(false);
+      return;
+    }
+
+    let maxId = 0;
+    parsedData.forEach((item) => {
+      if (Number(item.id) > maxId) {
+        maxId = Number(item.id);
+      }
+    });
+
+    idRef.current = maxId + 1;
+
+    dispatch({
+      type: "INIT",
+      data: parsedData,
+    });
+
+    setIsLoading(false);
+  }, []);
 
   const onCreate = (content) => {
     dispatch({
@@ -89,6 +116,10 @@ function Todo() {
       onDelete,
     };
   }, []);
+
+  if (isLoading) {
+    return <div>데이터 로딩중 ...</div>;
+  }
 
   return (
     <div className="Todo">
