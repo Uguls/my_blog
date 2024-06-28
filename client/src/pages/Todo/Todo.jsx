@@ -6,50 +6,26 @@ import {
   createContext,
   useMemo,
   useEffect,
+  useState,
 } from "react";
+import {
+  initTodo,
+  createTodo,
+  updateTodo,
+  deleteTodo,
+} from "../../store/store";
 import Header from "../../components/Todo/Header";
 import Editor from "../../components/Todo/Editor";
 import List from "../../components/Todo/List";
-
-function reducer(state, action) {
-  let nextState;
-
-  switch (action.type) {
-    case "INIT":
-      return action.data;
-    case "CREATE": {
-      nextState = [action.newItem, ...state];
-      break;
-    }
-    case "UPDATE": {
-      nextState = state.map((it) =>
-        it.id === action.targetId
-          ? {
-              ...it,
-              isDone: !it.isDone,
-            }
-          : it,
-      );
-      break;
-    }
-    case "DELETE": {
-      nextState = state.filter((it) => it.id !== action.targetId);
-      break;
-    }
-    default:
-      return state;
-  }
-
-  localStorage.setItem("Todo", JSON.stringify(nextState));
-  return nextState;
-}
+import { useDispatch, useSelector } from "react-redux";
 
 export const TodoStateContext = createContext();
 export const TodoDispatchContext = createContext();
 
 function Todo() {
   const [isLoading, setIsLoading] = useState(true);
-  const [todos, dispatch] = useReducer(reducer, []);
+  const todos = useSelector((state) => state.todo);
+  const dispatch = useDispatch();
   const idRef = useRef(0);
 
   useEffect(() => {
@@ -74,48 +50,30 @@ function Todo() {
 
     idRef.current = maxId + 1;
 
-    dispatch({
-      type: "INIT",
-      data: parsedData,
-    });
+    dispatch(initTodo(parsedData));
 
     setIsLoading(false);
   }, []);
 
   const onCreate = (content) => {
-    dispatch({
-      type: "CREATE",
-      newItem: {
+    dispatch(
+      createTodo({
         id: idRef.current,
         content,
         isDone: false,
         createdDate: new Date().getTime(),
-      },
-    });
-    idRef.current += 1;
+      }),
+      (idRef.current += 1),
+    );
   };
 
-  const onUpdate = useCallback((targetId) => {
-    dispatch({
-      type: "UPDATE",
-      targetId,
-    });
-  }, []);
+  const onUpdate = (id) => {
+    dispatch(updateTodo(id));
+  };
 
-  const onDelete = useCallback((targetId) => {
-    dispatch({
-      type: "DELETE",
-      targetId,
-    });
-  }, []);
-
-  const memoizedDispatch = useMemo(() => {
-    return {
-      onCreate,
-      onUpdate,
-      onDelete,
-    };
-  }, []);
+  const onDelete = (id) => {
+    dispatch(deleteTodo(id));
+  };
 
   if (isLoading) {
     return <div>데이터 로딩중 ...</div>;
@@ -125,7 +83,7 @@ function Todo() {
     <div className="Todo">
       <Header />
       <TodoStateContext.Provider value={todos}>
-        <TodoDispatchContext.Provider value={memoizedDispatch}>
+        <TodoDispatchContext.Provider value={{ onCreate, onUpdate, onDelete }}>
           <Editor />
           <List />
         </TodoDispatchContext.Provider>

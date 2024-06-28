@@ -3,7 +3,6 @@ import {
   Flex,
   Avatar,
   HStack,
-  Link,
   IconButton,
   Button,
   Menu,
@@ -16,8 +15,9 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
+import { Link } from "react-router-dom";
 
-const Links = ["Todo", "Projects", "About", "Contact"];
+const Links = ["Todo", "Diary", "About", "Contact"];
 
 const NavLink = ({ children }) => (
   <Link
@@ -28,7 +28,7 @@ const NavLink = ({ children }) => (
       textDecoration: "none",
       bg: useColorModeValue("gray.200", "gray.700"),
     }}
-    href={`${children.toLowerCase()}`}
+    to={`${children.toLowerCase()}`}
   >
     {children}
   </Link>
@@ -49,7 +49,9 @@ export default function Navbar() {
             onClick={isOpen ? onClose : onOpen}
           />
           <HStack spacing={8} alignItems={"center"}>
-            <Box>Uguls</Box>
+            <Box>
+              <Link to={"/"}>Uguls</Link>
+            </Box>
             <HStack
               as={"nav"}
               spacing={4}
@@ -75,7 +77,9 @@ export default function Navbar() {
                 <MenuItem>Link 1</MenuItem>
                 <MenuItem>Link 2</MenuItem>
                 <MenuDivider />
-                <MenuItem>Link 3</MenuItem>
+                <MenuItem>
+                  <NavLink>Login</NavLink>
+                </MenuItem>
               </MenuList>
             </Menu>
           </Flex>
