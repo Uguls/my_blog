@@ -7,9 +7,6 @@ import {
   deleteDiary,
 } from "../../store/store";
 
-export const DiaryStateContext = createContext();
-export const DiaryDispatchContext = createContext();
-
 export function DiaryProvider({ children }) {
   const [isLoading, setIsLoading] = useState(true);
   const data = useSelector((state) => state.diary);
@@ -42,41 +39,9 @@ export function DiaryProvider({ children }) {
     setIsLoading(false);
   }, [dispatch]);
 
-  const onCreate = (createdDate, emotionId, content) => {
-    dispatch(
-      createDiary({
-        id: idRef.current++,
-        createdDate,
-        emotionId,
-        content,
-      }),
-    );
-  };
-
-  const onUpdate = (id, createdDate, emotionId, content) => {
-    dispatch(
-      updateDiary({
-        id,
-        createdDate,
-        emotionId,
-        content,
-      }),
-    );
-  };
-
-  const onDelete = (id) => {
-    dispatch(deleteDiary(id));
-  };
-
   if (isLoading) {
     return <div>데이터 로딩중 ...</div>;
   }
 
-  return (
-    <DiaryStateContext.Provider value={data}>
-      <DiaryDispatchContext.Provider value={{ onCreate, onUpdate, onDelete }}>
-        {children}
-      </DiaryDispatchContext.Provider>
-    </DiaryStateContext.Provider>
-  );
+  return <>{children}</>;
 }

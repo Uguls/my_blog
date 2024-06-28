@@ -2,8 +2,8 @@ import "../../App.css";
 import Header from "../../components/Diary/Header";
 import Button from "../../components/Diary/Button";
 import { useContext, useState } from "react";
-import { DiaryStateContext } from "../../components/Diary/DiaryProvider";
 import DiaryList from "../../components/Diary/DiaryList";
+import { useSelector } from "react-redux";
 
 const getMonthlyData = (pivotDate, data) => {
   const beginTime = new Date(
@@ -29,7 +29,7 @@ const getMonthlyData = (pivotDate, data) => {
 };
 
 function Home() {
-  const data = useContext(DiaryStateContext);
+  const data = useSelector((state) => state.diary);
   const [pivotDate, setPivotDate] = useState(new Date());
 
   const monthlyData = getMonthlyData(pivotDate, data);

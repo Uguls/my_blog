@@ -1,21 +1,51 @@
 import Header from "../../components/Diary/Header";
 import Button from "../../components/Diary/Button";
 import Editor from "../../components/Diary/Editor";
+import { createDiary } from "../../store/store";
 
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
-import { DiaryDispatchContext } from "../../components/Diary/DiaryProvider";
+import { useDispatch } from "react-redux";
+
+const getHighestId = () => {
+  const storedData = localStorage.getItem("diary");
+  if (!storedData) {
+    return 0;
+  }
+
+  const parsedData = JSON.parse(storedData);
+  if (!Array.isArray(parsedData)) {
+    return 0;
+  }
+
+  let maxId = 0;
+  parsedData.forEach((item) => {
+    if (Number(item.id) > maxId) {
+      maxId = Number(item.id);
+    }
+  });
+
+  return maxId;
+};
 
 const New = () => {
+  const dispatch = useDispatch();
+
   // Edit페이지가 아닌 New 페이지이기 때문에 onCreate 함수를 useContext를 사용해서 받아옴
-  const { onCreate } = useContext(DiaryDispatchContext);
 
   const nav = useNavigate();
 
   // 불러온 onCreate함수에 Editor컴포넌트로부터 전달받은 input state를 인자로 받아
   // onCreate함수에 인자로 넣는데 createdDate는 timestamp형식이기 때문에 .getTime()작성
   const onSubmit = (input) => {
-    onCreate(input.createdDate.getTime(), input.emotionId, input.content);
+    const newId = getHighestId() + 1;
+    dispatch(
+      createDiary({
+        id: newId,
+        createdDate: input.createdDate.getTime(),
+        ...input,
+      }),
+    );
     nav("/diary", { replace: true });
   };
 
