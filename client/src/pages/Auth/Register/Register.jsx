@@ -11,6 +11,8 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
+import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -18,17 +20,35 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
 
+  const nav = useNavigate()
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(
-      `Name: ${name}, Email: ${email}, Password: ${password}, PasswordCheck: ${passwordCheck}`,
-    );
+
     if (password !== passwordCheck) {
       window.alert("비밀번호가 일치하지 않습니다.");
+      setPassword("");
+      setPasswordCheck("");
     }
-    setPassword("");
-    setPasswordCheck("");
-  };
+
+
+  axios.post(`${import.meta.env.VITE_BACK_URL}/auth/join`, {
+    nick: name,
+    email: email,
+    password: password,
+  },{
+    withCredentials: true,
+  }).then(res => {
+    if (res.data === '회원가입 완료') {
+      window.alert('회원가입이 완료되었습니다!');
+      nav("/login");
+    } else {
+      window.alert("회원가입에 실패하였습니다.")
+    }
+  }).catch((err)=>{
+    console.error('Error:', err)
+  })
+};
 
   return (
     <Box

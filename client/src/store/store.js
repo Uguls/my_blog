@@ -1,4 +1,53 @@
 import { createStore, combineReducers } from "redux";
+import { jwtDecode } from 'jwt-decode';
+
+// 로컬 스토리지에 상태 저장
+const saveStateToLocalStorage = (state) => {
+  try {
+    const serializedState = JSON.stringify(state);
+    localStorage.setItem('state', serializedState);
+  } catch (e) {
+    console.error("Could not save state", e);
+  }
+};
+
+// 로컬 스토리지에서 상태 불러오기
+const loadStateFromLocalStorage = () => {
+  try {
+    const serializedState = localStorage.getItem('state');
+    if (serializedState === null) return undefined;
+    return JSON.parse(serializedState);
+  } catch (e) {
+    console.error("Could not load state", e);
+    return undefined;
+  }
+};
+
+// JWT를 쿠키에서 가져오기
+const getCookie = (name) => {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+};
+
+// 초기 상태
+const initialDiaryState = [];
+const initialTodoState = [];
+const initialLoginState = {
+  isAuthenticated: false,
+  user: null,
+  isAdmin: false,
+};
+
+// 로그인 액션 크리에이터 정의
+export const setLogin = (user, isAdmin) => ({
+  type: "SET_AUTH",
+  payload: { user, isAdmin },
+});
+
+export const logout = () => ({
+  type: "LOGOUT",
+});
 
 // 다이어리 액션 크리에이터 정의
 export const initDiary = (data) => ({
@@ -42,9 +91,22 @@ export const deleteTodo = (id) => ({
   id,
 });
 
-// 초기 상태
-const initialDiaryState = [];
-const initialTodoState = [];
+// 리듀서 정의
+const authReducer = (state = initialLoginState, action) => {
+  switch (action.type) {
+    case "SET_AUTH":
+      return {
+        ...state,
+        isAuthenticated: !!action.payload.user,
+        user: action.payload.user,
+        isAdmin: action.payload.isAdmin,
+      };
+    case "LOGOUT":
+      return initialLoginState;
+    default:
+      return state;
+  }
+};
 
 // 리듀서 정의
 const diaryReducer = (state = initialDiaryState, action) => {
@@ -90,9 +152,9 @@ const todoReducer = (state = initialTodoState, action) => {
       nextState = state.map((item) =>
         item.id === action.id
           ? {
-              ...item,
-              isDone: !item.isDone,
-            }
+            ...item,
+            isDone: !item.isDone,
+          }
           : item,
       );
       break;
@@ -113,6 +175,29 @@ const todoReducer = (state = initialTodoState, action) => {
 const rootReducer = combineReducers({
   diary: diaryReducer,
   todo: todoReducer,
+  login: authReducer,
 });
 
-export const store = createStore(rootReducer);
+// 로컬 스토리지에서 초기 상태 불러오기 및 JWT 디코딩
+const persistedState = loadStateFromLocalStorage() || {};
+const token = getCookie('jwt');
+if (token) {
+  const decoded = jwtDecode(token);
+  persistedState.login = {
+    isAuthenticated: true,
+    user: { id: decoded.id, email: decoded.email },
+    isAdmin: decoded.role === 'admin',
+  };
+}
+
+const store = createStore(
+  rootReducer,
+  persistedState
+);
+
+// 스토어 상태가 변경될 때마다 로컬 스토리지에 저장
+store.subscribe(() => {
+  saveStateToLocalStorage(store.getState());
+});
+
+export { store };

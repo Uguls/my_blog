@@ -7,8 +7,37 @@ import Login from "./pages/Auth/Login/Login";
 import Register from "./pages/Auth/Register/Register";
 import Notfound from "./pages/Diary/Notfound";
 import Navbar from "./components/Navbar";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { setLogin, logout } from "./store/store"
+import { jwtDecode } from 'jwt-decode';
+import axiosInstance from "./util/axiosInstance";
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      console.log("Checking authentication...");
+      try {
+        const response = await axiosInstance.get('/auth/validate-token');
+        console.log("Validation response:", response);
+
+        if (response.status === 200) {
+          const user = response.data.user;
+          dispatch(setLogin({ id: user.id, email: user.email }, user.role === 'admin'));
+        } else {
+          dispatch(logout());
+        }
+      } catch (error) {
+        console.error("Error during authentication check:", error);
+        dispatch(logout());
+      }
+    };
+
+    checkAuth();
+  }, [dispatch]);
+
   return (
     <div className="App">
       <Navbar />

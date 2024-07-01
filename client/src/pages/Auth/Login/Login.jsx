@@ -11,14 +11,42 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
+import axiosInstance from "../../../util/axiosInstance";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import {setLogin} from "../../../store/store";
 
 const Login = () => {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
+  const nav = useNavigate();
+  const dispatch = useDispatch();
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(`ID: ${id}, Password: ${password}`);
+
+    try {
+      const response = await axiosInstance.post('/auth/login', {
+        email: id,
+        password: password
+      });
+      if (response.status === 200) {
+        const user = response.data.user;
+        const isAdmin = user.role === "admin";
+        dispatch(setLogin(user, isAdmin));
+        nav("/");
+      }
+    } catch (error) {
+      if (error.response) {
+        if (error.response.status === 401) {
+          window.alert("로그인에 실패하였습니다. 이메일 또는 비밀번호를 확인하세요.");
+        } else {
+          window.alert(`로그인에 실패하였습니다. 상태 코드: ${error.response.status}`);
+        }
+      } else {
+        window.alert("로그인 중 문제가 발생했습니다. 다시 시도해주세요.");
+      }
+    }
   };
 
   return (
@@ -64,9 +92,6 @@ const Login = () => {
             로그인
           </Button>
         </Stack>
-        {/*<ChakraLink as={RouterLink} to="/forgot-password" color={"blue.400"}>*/}
-        {/*  비밀번호를 잊어버리셨나요?*/}
-        {/*</ChakraLink>*/}
         <ChakraLink as={RouterLink} to="/register" color={"blue.400"}>
           회원가입
         </ChakraLink>
