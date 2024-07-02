@@ -1,19 +1,13 @@
 const express = require('express');
-const passport = require('passport');
 const { isLoggedIn, isNotLoggedIn } = require('../middlewares');
-const { join, login, logout, test} = require('../controllers/auth');
+const { join, login, logout, refreshToken, validateToken} = require('../controllers/auth');
 
 const router = express.Router();
 
-// POST /api/auth/join
-router.post('/join', join);
-
-// POST /auth/login
+router.post('/join', isNotLoggedIn, join);
 router.post('/login', isNotLoggedIn, login);
-
-// GET /auth/logout
-router.get('/logout', isLoggedIn, logout);
-
-router.get('/test', test)
+router.post('/token', isLoggedIn, refreshToken);
+router.post('/logout', isLoggedIn, logout);
+router.get('/validate-token', validateToken);
 
 module.exports = router;

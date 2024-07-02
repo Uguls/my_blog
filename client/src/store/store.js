@@ -1,5 +1,6 @@
 import { createStore, combineReducers } from "redux";
 import { jwtDecode } from 'jwt-decode';
+import {configureStore, createSlice} from "@reduxjs/toolkit";
 
 // 로컬 스토리지에 상태 저장
 const saveStateToLocalStorage = (state) => {
@@ -39,144 +40,78 @@ const initialLoginState = {
   isAdmin: false,
 };
 
-// 로그인 액션 크리에이터 정의
-export const setLogin = (user, isAdmin) => ({
-  type: "SET_AUTH",
-  payload: { user, isAdmin },
+// 다이어리 Slice 정의
+const diarySlice = createSlice({
+  name: 'diary',
+  initialState: initialDiaryState,
+  reducers: {
+    initDiary(state, action) {
+      return [...action.payload];
+    },
+    createDiary(state, action) {
+      state.unshift(action.payload);
+    },
+    updateDiary(state, action) {
+      return state.map((item) => String(item.id) === String(action.payload.id) ? action.payload : item);
+    },
+    deleteDiary(state, action) {
+      return state.filter((item) => String(item.id) !== String(action.payload));
+    },
+  },
 });
 
-export const logout = () => ({
-  type: "LOGOUT",
+// Todo Slice 정의
+const todoSlice = createSlice({
+  name: 'todo',
+  initialState: initialTodoState,
+  reducers: {
+    initTodo(state, action) {
+      return action.payload;
+    },
+    createTodo(state, action) {
+      state.unshift(action.payload);
+    },
+    updateTodo(state, action) {
+      return state.map((item) =>
+        item.id === action.payload
+          ? { ...item, isDone: !item.isDone }
+          : item
+      );
+    },
+    deleteTodo(state, action) {
+      return state.filter((item) => item.id !== action.payload);
+    },
+  },
 });
 
-// 다이어리 액션 크리에이터 정의
-export const initDiary = (data) => ({
-  type: "INIT_DIARY",
-  data,
-});
-
-export const createDiary = (data) => ({
-  type: "CREATE_DIARY",
-  data,
-});
-
-export const updateDiary = (data) => ({
-  type: "UPDATE_DIARY",
-  data,
-});
-
-export const deleteDiary = (id) => ({
-  type: "DELETE_DIARY",
-  id,
-});
-
-// Todo 액션 크리에이터 정의
-export const initTodo = (data) => ({
-  type: "INIT_TODO",
-  data,
-});
-
-export const createTodo = (data) => ({
-  type: "CREATE_TODO",
-  data,
-});
-
-export const updateTodo = (id) => ({
-  type: "UPDATE_TODO",
-  id,
-});
-
-export const deleteTodo = (id) => ({
-  type: "DELETE_TODO",
-  id,
-});
-
-// 리듀서 정의
-const authReducer = (state = initialLoginState, action) => {
-  switch (action.type) {
-    case "SET_AUTH":
-      return {
-        ...state,
-        isAuthenticated: !!action.payload.user,
-        user: action.payload.user,
-        isAdmin: action.payload.isAdmin,
-      };
-    case "LOGOUT":
+// 로그인 Slice 정의
+const loginSlice = createSlice({
+  name: 'login',
+  initialState: initialLoginState,
+  reducers: {
+    setLogin(state, action) {
+      state.isAuthenticated = !!action.payload;
+      state.user = action.payload;
+      state.isAdmin = action.payload.isAdmin === 'admin' ? 'true' : 'false';
+    },
+    logout(state) {
       return initialLoginState;
-    default:
-      return state;
-  }
-};
-
-// 리듀서 정의
-const diaryReducer = (state = initialDiaryState, action) => {
-  let nextState;
-
-  switch (action.type) {
-    case "INIT_DIARY": {
-      return [...action.data];
-    }
-    case "CREATE_DIARY": {
-      nextState = [action.data, ...state];
-      break;
-    }
-    case "UPDATE_DIARY": {
-      nextState = state.map((item) =>
-        String(item.id) === String(action.data.id) ? action.data : item,
-      );
-      break;
-    }
-    case "DELETE_DIARY": {
-      nextState = state.filter((item) => String(item.id) !== String(action.id));
-      break;
-    }
-    default:
-      return state;
-  }
-
-  localStorage.setItem("diary", JSON.stringify(nextState));
-  return [...nextState];
-};
-
-const todoReducer = (state = initialTodoState, action) => {
-  let nextState;
-
-  switch (action.type) {
-    case "INIT_TODO":
-      return action.data;
-    case "CREATE_TODO": {
-      nextState = [action.data, ...state];
-      break;
-    }
-    case "UPDATE_TODO": {
-      nextState = state.map((item) =>
-        item.id === action.id
-          ? {
-            ...item,
-            isDone: !item.isDone,
-          }
-          : item,
-      );
-      break;
-    }
-    case "DELETE_TODO": {
-      nextState = state.filter((item) => item.id !== action.id);
-      break;
-    }
-    default:
-      return state;
-  }
-
-  localStorage.setItem("Todo", JSON.stringify(nextState));
-  return nextState;
-};
-
-// 리덕스 스토어 생성
-const rootReducer = combineReducers({
-  diary: diaryReducer,
-  todo: todoReducer,
-  login: authReducer,
+    },
+  },
 });
+
+// 액션 추출
+export const {
+  initDiary, createDiary, updateDiary, deleteDiary
+} = diarySlice.actions;
+
+export const {
+  initTodo, createTodo, updateTodo, deleteTodo
+} = todoSlice.actions;
+
+export const {
+  setLogin, logout
+} = loginSlice.actions;
 
 // 로컬 스토리지에서 초기 상태 불러오기 및 JWT 디코딩
 const persistedState = loadStateFromLocalStorage() || {};
@@ -190,10 +125,15 @@ if (token) {
   };
 }
 
-const store = createStore(
-  rootReducer,
-  persistedState
-);
+// 리덕스 스토어 생성
+const store = configureStore({
+  reducer: {
+    diary: diarySlice.reducer,
+    todo: todoSlice.reducer,
+    login: loginSlice.reducer,
+  },
+  preloadedState: persistedState,
+});
 
 // 스토어 상태가 변경될 때마다 로컬 스토리지에 저장
 store.subscribe(() => {

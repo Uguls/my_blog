@@ -29,7 +29,7 @@ module.exports = class Todos extends Sequelize.Model {
         timestamps: true,
         underscored: false,
         modelName: "Todo",
-        tableName: "Todoss",
+        tableName: "Todos",
         paranoid: false,
         charset: "utf8mb4",
         collate: "utf8mb4_general_ci",
@@ -38,6 +38,6 @@ module.exports = class Todos extends Sequelize.Model {
   }
 
   static associate(db) {
-    db.Todos.belongsTo(db.User);
+    db.Todo.belongsTo(db.User);
   }
 };

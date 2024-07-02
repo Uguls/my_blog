@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import {
   Box,
   FormControl,
@@ -13,14 +13,22 @@ import {
 import { Link as RouterLink } from "react-router-dom";
 import axiosInstance from "../../../util/axiosInstance";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {setLogin} from "../../../store/store";
 
 const Login = () => {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
+  const { isAuthenticated } = useSelector((state) => state.login);
   const nav = useNavigate();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      nav('/',{replace:true})
+    }
+  }, []);
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();

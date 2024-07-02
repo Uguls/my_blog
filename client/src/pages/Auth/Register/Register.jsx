@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import {
   Box,
   FormControl,
@@ -13,14 +13,23 @@ import {
 import { Link as RouterLink } from "react-router-dom";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
+import {useSelector} from "react-redux";
 
 const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
+  const { isAuthenticated } = useSelector((state) => state.login);
 
   const nav = useNavigate()
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      nav('/', {replace:true})
+    }
+  }, []);
+
 
   const handleSubmit = (event) => {
     event.preventDefault();
