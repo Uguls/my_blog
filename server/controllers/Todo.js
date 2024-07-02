@@ -1,4 +1,4 @@
-const { Todo, User } = require("../models");
+const { Todo } = require("../models");
 const e = require("express");
 
 exports.uploadTodo = async (req, res, next) => {

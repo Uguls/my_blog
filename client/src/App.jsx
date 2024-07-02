@@ -18,14 +18,11 @@ function App() {
 
   useEffect(() => {
     const checkAuth = async () => {
-      console.log("Checking authentication...");
       try {
         const response = await axiosInstance.get('/auth/validate-token');
-        console.log("Validation response:", response);
-
         if (response.status === 200) {
           const user = response.data.user;
-          dispatch(setLogin({ id: user.id, email: user.email }, user.role === 'admin'));
+          dispatch(setLogin({ email: user.email, role: user.role }));
         } else {
           dispatch(logout());
         }
