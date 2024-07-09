@@ -52,6 +52,7 @@ const diarySlice = createSlice({
       state.unshift(action.payload);
     },
     updateDiary(state, action) {
+      console.log(action.payload)
       return state.map((item) => String(item.id) === String(action.payload.id) ? action.payload : item);
     },
     deleteDiary(state, action) {
@@ -90,9 +91,8 @@ const loginSlice = createSlice({
   initialState: initialLoginState,
   reducers: {
     setLogin(state, action) {
-      state.isAuthenticated = !!action.payload;
-      state.user = action.payload;
-      state.isAdmin = action.payload.isAdmin === 'admin' ? 'true' : 'false';
+      state.isAuthenticated = true;
+      state.isAdmin = action.payload;
     },
     logout(state) {
       return initialLoginState;
@@ -116,6 +116,7 @@ export const {
 // 로컬 스토리지에서 초기 상태 불러오기 및 JWT 디코딩
 const persistedState = loadStateFromLocalStorage() || {};
 const token = getCookie('jwt');
+
 if (token) {
   const decoded = jwtDecode(token);
   persistedState.login = {
@@ -124,6 +125,7 @@ if (token) {
     isAdmin: decoded.role === 'admin',
   };
 }
+
 
 // 리덕스 스토어 생성
 const store = configureStore({

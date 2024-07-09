@@ -1,25 +1,30 @@
 import Header from "../../components/Diary/Header";
 import Button from "../../components/Diary/Button";
 import Editor from "../../components/Diary/Editor";
-import { createDiary } from "../../store/store";
+import {createDiary, store} from "../../store/store";
 
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { useDispatch } from "react-redux";
 
 const getHighestId = () => {
-  const storedData = localStorage.getItem("diary");
+  const storedData = localStorage.getItem("state");
+
   if (!storedData) {
     return 0;
   }
 
   const parsedData = JSON.parse(storedData);
-  if (!Array.isArray(parsedData)) {
-    return 0;
-  }
+
+  const diaryArray = parsedData.diary;
+
+  // if (!Array.isArray(parsedData) || !Array.isArray(diaryArray)) {
+  //   return 0;
+  // }
 
   let maxId = 0;
-  parsedData.forEach((item) => {
+
+  diaryArray.forEach((item) => {
     if (Number(item.id) > maxId) {
       maxId = Number(item.id);
     }
@@ -42,7 +47,7 @@ const New = () => {
     dispatch(
       createDiary({
         id: newId,
-        createdDate: input.createdDate.getTime(),
+        // createdDate: input.createdDate,
         ...input,
       }),
     );

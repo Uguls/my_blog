@@ -29,7 +29,6 @@ const Login = () => {
     }
   }, []);
 
-
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -40,8 +39,8 @@ const Login = () => {
       });
       if (response.status === 200) {
         const user = response.data.user;
-        const isAdmin = user.role === "admin";
-        dispatch(setLogin(user, isAdmin));
+        const isAdmin = user === "admin" ? true : false;
+        dispatch(setLogin(isAdmin));
         nav("/");
       }
     } catch (error) {

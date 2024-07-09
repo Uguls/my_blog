@@ -28,7 +28,15 @@ module.exports = class User extends Sequelize.Model {
       role:{
         type: Sequelize.ENUM('admin', 'user'),
         allowNull: false,
-      }
+      },
+      token:{
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      expiryDate: {
+        type: Sequelize.DATE,
+        allowNull: true,
+      },
     }, {
       sequelize,
       timestamps: true,
