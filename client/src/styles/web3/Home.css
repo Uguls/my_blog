@@ -1,0 +1,103 @@
+.title {
+    font-size: 70px;
+    text-align: center;
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    height: 100%;
+    width: 100%;
+    background-color: white;
+    padding: 20px;
+}
+
+.info {
+    margin: 20px;
+    text-align: left;
+    border: solid skyblue;
+    border-radius: 10px;
+    padding: 15px;
+}
+
+.info div {
+    margin: 10px 0;
+    font-size: 20px;
+    color: #333;
+}
+
+.info .info_title {
+    margin-top: 0;
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+    border: solid lightblue;
+    border-radius: 10px;
+}
+
+.info .all_accounts {
+    margin-top: 50px;
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+    border: solid lightblue;
+    border-radius: 10px;
+}
+
+.connect-button {
+    display: block;
+    margin: 10px auto;
+    width: fit-content;
+    padding: 10px 20px;
+    font-size: 18px;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.connect-button:hover {
+    background-color: #0056b3;
+}
+
+.SendEther .container {
+    border: solid skyblue;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 428px;
+    width: 568px;
+    background-color: white;
+    padding: 20px;
+}
+
+.SendEther .button {
+    width: 500px;
+    margin: 10px;
+}
+
+.SendEther .button.dev{
+    margin-top: 10%;
+}
+
+.SendEther .input {
+    margin: 10px;
+    padding: 5px;
+    border: solid grey;
+    width: 500px;
+}
+
+.trx_hash {
+    text-align: center;
+    font-size: 20px;
+    word-break: break-all;
+}
+.trx_hash .trx_title{
+    font-size: 24px;
+}
