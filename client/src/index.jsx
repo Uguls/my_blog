@@ -6,20 +6,28 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
-import { Web3ReactProvider } from "@web3-react/core";
-import {hooks, metaMask} from "./util/connectors/metaMask";
 
-const connectors = [[metaMask, hooks]];
+// web3
+import {WagmiProvider} from "wagmi";
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+import {config, RainbowKitConfig} from "./wagmi/config";
+import {RainbowKitProvider} from "@rainbow-me/rainbowkit";
+
+const queryClient = new QueryClient()
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <Web3ReactProvider connectors={connectors}>
-    <Provider store={store}>
-      <BrowserRouter>
-        <ChakraProvider>
-          <App />
-        </ChakraProvider>
-      </BrowserRouter>
-    </Provider>
-  </Web3ReactProvider>
+  <WagmiProvider config={RainbowKitConfig}>
+    <QueryClientProvider client={queryClient}>
+      <RainbowKitProvider>
+        <Provider store={store}>
+          <BrowserRouter>
+            <ChakraProvider>
+              <App />
+            </ChakraProvider>
+          </BrowserRouter>
+        </Provider>
+      </RainbowKitProvider>
+    </QueryClientProvider>
+  </WagmiProvider>
 );

@@ -5,7 +5,6 @@ import { useDispatch } from "react-redux";
 import { setLogin, logout } from "./store/store";
 import {jwtDecode} from 'jwt-decode';
 import axiosInstance from "./util/axiosInstance";
-import { useWeb3React } from "@web3-react/core";
 
 // 컴포넌트 임포트
 import Navbar from "./components/Navbar";
