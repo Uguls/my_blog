@@ -18,8 +18,12 @@ import {
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { Link as RouterLink } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import axiosInstance from "../util/axiosInstance";
+import {logout} from "../store/store";
 
-const Links = ["Todo", "Projects", "About", "Contact"];
+const Links = ["Todo", "Diary"];
 
 const NavLink = ({ children }) => (
   <ChakraLink
@@ -31,7 +35,7 @@ const NavLink = ({ children }) => (
       textDecoration: "none",
       bg: useColorModeValue("gray.200", "gray.700"),
     }}
-    href={`${children.toLowerCase()}`}
+    to={`${children.toLowerCase()}`}
   >
     {children}
   </ChakraLink>
@@ -39,6 +43,21 @@ const NavLink = ({ children }) => (
 
 export default function Navbar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const nav = useNavigate();
+  const dispatch = useDispatch();
+  const { isAuthenticated } = useSelector((state) => state.login);
+
+  const handleLogout = async () => {
+    try {
+      await axiosInstance.post('/auth/logout')
+      window.alert("로그아웃을 하시겠습니까?")
+      dispatch(logout())
+      nav("/",{replace:true})
+    } catch (error){
+      console.error("로그아웃 중 문제가 발생했습니다.", error)
+    }
+  };
+
 
   return (
     <>
@@ -54,7 +73,7 @@ export default function Navbar() {
           <HStack spacing={8} alignItems={"center"}>
             <Box>
               <ChakraLink as={RouterLink} to={"/"}>
-                Uguls
+                Uguls' Blog
               </ChakraLink>
             </Box>
             <HStack
@@ -79,10 +98,18 @@ export default function Navbar() {
                 <Avatar size={"sm"} src={"../assets/person.jpg"} />
               </MenuButton>
               <MenuList>
-                <MenuItem>Link 1</MenuItem>
-                <MenuItem>Link 2</MenuItem>
+                {isAuthenticated ? (
+                  <MenuItem onClick={()=>nav("/editprofile")}>회원정보 수정</MenuItem>
+                ) : (<></>)
+                }
                 <MenuDivider />
-                <MenuItem>Link 3</MenuItem>
+                {isAuthenticated ? (
+                  <MenuItem onClick={handleLogout}>로그아웃</MenuItem>
+                ) : (
+                  <>
+                    <MenuItem onClick={()=>nav("/login")}>로그인 / 회원가입</MenuItem>
+                  </>
+                )}
               </MenuList>
             </Menu>
           </Flex>

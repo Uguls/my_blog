@@ -23,7 +23,7 @@ nunjucks.configure('views', {
   express: app,
   watch: true,
 });
-sequelize.sync({ force: false })
+sequelize.sync({ alter: false })
   .then(() => {
     console.log('데이터베이스 연결 성공');
   })
@@ -43,7 +43,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
 app.use(passport.initialize());
-// passport.session()은 JWT 인증에서는 필요하지 않음
 
 app.use('/api/auth', authRouter);
 

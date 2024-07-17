@@ -1,17 +1,21 @@
 import "./App.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { setLogin, logout } from "./store/store";
+import {jwtDecode} from 'jwt-decode';
+import axiosInstance from "./util/axiosInstance";
+
+// 컴포넌트 임포트
+import Navbar from "./components/Navbar";
+import DiaryRoutes from "./components/Diary/DiaryRoutes";
+// 페이지 임포트
 import Main from "./pages/main";
 import Todo from "./pages/Todo/Todo";
-import DiaryRoutes from "./components/Diary/DiaryRoutes";
 import Login from "./pages/Auth/Login/Login";
 import Register from "./pages/Auth/Register/Register";
 import Notfound from "./pages/Diary/Notfound";
-import Navbar from "./components/Navbar";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { setLogin, logout } from "./store/store"
-import { jwtDecode } from 'jwt-decode';
-import axiosInstance from "./util/axiosInstance";
+import EditProfile from "./pages/EditProfile/EditProfile";
 
 function App() {
   const dispatch = useDispatch();
@@ -22,13 +26,30 @@ function App() {
         const response = await axiosInstance.get('/auth/validate-token');
         if (response.status === 200) {
           const user = response.data.user;
-          dispatch(setLogin({ email: user.email, role: user.role }));
+          const isAdmin = user.role === "admin" ? true : false;
+          dispatch(setLogin(isAdmin));
         } else {
-          dispatch(logout());
+          throw new Error("토큰 인증 실패");
         }
       } catch (error) {
-        console.error("Error during authentication check:", error);
-        dispatch(logout());
+        try {
+          const refreshResponse = await axiosInstance.get("/auth/token");
+          if (refreshResponse.status === 200) {
+            const newTokenValidateReponse = await axiosInstance.get('/auth/validate-token');
+            if (newTokenValidateReponse.status === 200) {
+              const user = newTokenValidateReponse.data.user;
+              const isAdmin = user.role === "admin" ? true : false;
+              dispatch(setLogin(isAdmin));
+            } else {
+              throw new Error("토큰 발급 에러1");
+            }
+          } else {
+            throw new Error("토큰 발급 에러2");
+          }
+        } catch (refreshError) {
+          dispatch(logout());
+          throw new Error("토큰 발급 에러3");
+        }
       }
     };
 
@@ -39,12 +60,13 @@ function App() {
     <div className="App">
       <Navbar />
       <Routes>
-        <Route path={"/"} element={<Main />} />
-        <Route path={"/todo"} element={<Todo />} />
-        <Route path={"/diary/*"} element={<DiaryRoutes />} />
-        <Route path={"/login"} element={<Login />} />
-        <Route path={"/register"} element={<Register />} />
+        <Route path="/" element={<Main />} />
+        <Route path="/todo" element={<Todo />} />
+        <Route path="/diary/*" element={<DiaryRoutes />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route path="*" element={<Notfound />} />
+        <Route path="/editprofile" element={<EditProfile />} />
       </Routes>
     </div>
   );

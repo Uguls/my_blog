@@ -22,14 +22,11 @@ const Edit = () => {
   };
 
   const onSubmit = (input) => {
-    console.log(input);
+    // console.log(input);
     if (window.confirm("일기를 정말 수정할까요?")) {
       dispatch(
         updateDiary(
-          params.id,
-          input.createdDate.getTime(),
-          input.emotionId,
-          input.content,
+          input
         ),
       );
       nav("/diary", { replace: true });

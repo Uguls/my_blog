@@ -6,16 +6,9 @@ import { useNavigate } from "react-router-dom";
 import { getStringedDate } from "../../util/get-stringed-date";
 import { emotionList } from "../../util/constants";
 
-// new 페이지 컴포넌트에서는 Create함수를 받고
-// edit 페이지 컴포넌트에서는 update함수를 받게 하기 위해
-// Editor 컴포넌트는 new, Edit 에서 공통으로 사용하는 컴포넌트 이기 때문에
-// 그렇게 하지 않고 Create 나 update함수를 고정적으로 받게 되면 다른 페이지에서 사용할때
-// 곤란한 상황이 생길 수 있다
-// ex) Create함수로 받게 되면 Edit 페이지에서는 update를 해야하는데 create를 하게 됨
 const Editor = ({ initData, onSubmit }) => {
-  // 사용자가 입력한 날짜, emotionId, content를 state로 저장
   const [input, setInput] = useState({
-    createdDate: new Date(),
+    createdDate: new Date().getTime(), // timestamp 형식으로 저장
     emotionId: 3,
     content: "",
   });
@@ -26,8 +19,7 @@ const Editor = ({ initData, onSubmit }) => {
     if (initData) {
       setInput({
         ...initData,
-        createdDate: new Date(Number(initData.createdDate)),
-        // Edit컴포넌트에서 timestamp형식으로 createdDate객체를 저장하기때문에 new Date로 바꿔줘야함,
+        createdDate: Number(initData.createdDate), // timestamp 형식으로 변환
       });
     }
   }, [initData]);
@@ -37,7 +29,7 @@ const Editor = ({ initData, onSubmit }) => {
     let value = e.target.value;
 
     if (name === "createdDate") {
-      value = new Date(value);
+      value = new Date(value).getTime(); // timestamp 형식으로 변환
     }
 
     setInput({
@@ -46,7 +38,6 @@ const Editor = ({ initData, onSubmit }) => {
     });
   };
 
-  // onSubmitButtonClick함수는 New.jsx컴포넌트로 부터 props로 전달된 함수 onSubmit을 호출
   const onSubmitButtonClick = () => {
     onSubmit(input); // onSubmit 함수를 호출하면서 인수로 input state값을 전달
   };
@@ -58,7 +49,7 @@ const Editor = ({ initData, onSubmit }) => {
         <input
           name={"createdDate"}
           onChange={onChangeInput}
-          value={getStringedDate(input.createdDate)}
+          value={getStringedDate(new Date(input.createdDate))} // Date 객체로 변환하여 문자열로 표시
           type={"date"}
         />
       </section>
@@ -66,8 +57,7 @@ const Editor = ({ initData, onSubmit }) => {
         <h4>오늘의 감정</h4>
         <div className={"emotion_list_wrapper"}>
           {emotionList.map((item) => (
-            <EmotionItem // 컴포넌트이기 때문에 이벤트 객체가 자동으로 전달 X
-              // 별도의 이벤트 객체 생성
+            <EmotionItem
               onClick={() =>
                 onChangeInput({
                   target: {
@@ -94,8 +84,6 @@ const Editor = ({ initData, onSubmit }) => {
       </section>
       <section className={"button_section"}>
         <Button text={"취소하기"} onClick={() => nav(-1)} />
-        {/*정리*/}
-        {/*버튼을 클릭하면 onSubmitButtonClick함수가 호출됨*/}
         <Button
           onClick={onSubmitButtonClick}
           text={"작성완료"}

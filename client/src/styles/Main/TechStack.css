@@ -1,0 +1,30 @@
+.tech_stack {
+    padding: 64px 16px;
+    text-align: center;
+}
+
+.section__title {
+    font-size: var(--font-size-tag);
+    color: var(--color-sub);
+}
+
+.section__type {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px
+}
+
+
+.section__type--title {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--color-text);
+}
+.section__type--content {
+    font-size: 24px;
+    /*font-weight: bold;*/
+}
+
+
+@media (min-width: 769px) {
+}
