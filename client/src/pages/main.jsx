@@ -4,7 +4,6 @@ import "../styles/Main/Main.css"
 import Header from "../components/Main/Header";
 import TechStack from "../components/Main/TechStack";
 import Projects from "../components/Main/Projects";
-import Home from "../components/web3/Home";
 
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -20,7 +19,6 @@ const Main = () => {
       <Header />
       <TechStack />
       <Projects />
-      <Home />
     </>
   );
 };

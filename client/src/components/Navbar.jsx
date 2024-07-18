@@ -23,7 +23,7 @@ import {useDispatch, useSelector} from "react-redux";
 import axiosInstance from "../util/axiosInstance";
 import {logout} from "../store/store";
 
-const Links = ["Todo", "Diary"];
+const Links = ["Todo", "Diary", "web3"];
 
 const NavLink = ({ children }) => (
   <ChakraLink

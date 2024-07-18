@@ -11,18 +11,21 @@ function ConnectWallet() {
 	if (isConnected) return <Account />
 }
 
-const Home = () => {
+const Web3home = () => {
 	return (
 		<div>
 			<div className={"title"}>
 				<h1>Web3-React</h1>
 			</div>
 			<div className={"connect-button"}>
-				<ConnectButton />
+				<ConnectButton/>
 			</div>
-			<SendEther />
+			<div className={"container"}>
+				<Account/>
+				<SendEther/>
+			</div>
 		</div>
 	);
 };
 
-export default Home;
+export default Web3home;
