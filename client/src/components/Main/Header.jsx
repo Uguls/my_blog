@@ -7,7 +7,7 @@ const Header = () => {
 				<div className={"intro__dark"}>
 					<div className={"intro__type"}>
 						<div><span aria-hidden={true}>😎</span> 억울한</div>
-						<div>블로그<span className={"underscore"}>_</span></div>
+						<div>Uguls<span className={"underscore"}>_</span></div>
 					</div>
 				</div>
 				<div className={"intro__tilt"}></div>

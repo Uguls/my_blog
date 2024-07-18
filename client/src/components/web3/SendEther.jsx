@@ -4,7 +4,6 @@ import {
 } from "wagmi";
 import {parseEther} from "viem";
 import {border, Link} from "@chakra-ui/react";
-import {Account} from "./account";
 import {useAccount} from "wagmi";
 import React from "react";
 
@@ -32,9 +31,6 @@ const SendEther = () => {
 		<div>
 			{status === 'connected' && (
 				<div className={"container"}>
-					<div className={"Account_Info"}>
-						<Account/>
-					</div>
 					<form className={"SendEther"} onSubmit={submit}>
 						<input className={"Adress"} name="address" placeholder="Address" required/>
 						<input className={"value"} name="value" placeholder="Eth" required/>
@@ -52,7 +48,7 @@ const SendEther = () => {
 				</div>
 			)}
 			{status === 'disconnected' && (
-				<div>Not connected</div>
+				<div></div>
 			)}
 		</div>
 	)

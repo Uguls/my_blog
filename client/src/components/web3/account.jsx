@@ -1,12 +1,31 @@
+import React, { useEffect, useState } from 'react';
 import { useAccount, useDisconnect, useBalance } from 'wagmi';
-import React from 'react';
+import { getTransactionCount } from "./Etherscan_API";
+import TransactionsByAddress from "./TransactionsByAddress";
 
 export function Account() {
 	const { address, addresses, chain, status } = useAccount();
 	const { disconnect } = useDisconnect();
+	const [transactionCount, setTransactionCount] = useState(null);
+	const [showTransactions, setShowTransactions] = useState(false);
+
+	useEffect(() => {
+		if (status === 'connected' && address) {
+			const fetchTransactionCount = async () => {
+				const count = await getTransactionCount(address);
+				setTransactionCount(count);
+			};
+
+			fetchTransactionCount();
+		}
+	}, [status, address]);
+
+	const handleToggleTransactions = () => {
+		setShowTransactions(prevState => !prevState);
+	};
 
 	return (
-		<div>
+		<div className={"Account_Info"}>
 			<div className={"Info"}>
 				{status === 'connected' && (
 					<>
@@ -18,6 +37,7 @@ export function Account() {
 								<div>ChainId: {chain?.id}</div>
 								<div>Network: {chain?.name}</div>
 								<div>현재 Address: {address}</div>
+								<div>TransactionCount: {transactionCount}</div>
 							</div>
 						</div>
 						<div className={"block"}>
@@ -26,9 +46,22 @@ export function Account() {
 							</div>
 							<div className={"addresses"}>
 								{addresses?.map((addr, index) => (
-									<AccountBalance key={index} address={addr}/>
+									<AccountBalance key={index} address={addr} />
 								))}
 							</div>
+						</div>
+						<div className={"block"}>
+							<div className={"title"}>
+								Transactions
+							</div>
+							<button className={"showButton"} onClick={handleToggleTransactions}>
+								{showTransactions ? "Hide Transactions" : "Show Transactions"}
+							</button>
+							{showTransactions && (
+								<div className={"transactions"}>
+									<TransactionsByAddress address={address} />
+								</div>
+							)}
 						</div>
 					</>
 				)}
@@ -40,8 +73,8 @@ export function Account() {
 	);
 }
 
-function AccountBalance({address}) {
-	const {data: balanceData, isError, isLoading} = useBalance({
+function AccountBalance({ address }) {
+	const { data: balanceData, isError, isLoading } = useBalance({
 		address,
 	});
 
