@@ -10,6 +10,8 @@ import React from "react";
 const SendEther = () => {
 	const {status} = useAccount()
 
+	// 비구조화 할당을 사용하여 data로 받아온 프로퍼티를 hash라는 이름의 프로퍼티이름으로 변환
+	// wagmi라이브러리의 useSendTransaction훅 사용
 	const {
 		data: hash,
 		error,
@@ -17,6 +19,9 @@ const SendEther = () => {
 		sendTransaction
 	} = useSendTransaction()
 
+	// form에서 받은 formData, to, value를 사용하여 sendTransaction사용
+	// sendTransaction은 useSendTransaction훅에서 받아온 프로퍼티
+	// sendTransaction으로 보낼때 value는 parseEther를 사용하여 변환 후 전송
 	async function submit(e) {
 		e.preventDefault();
 		const formData = new FormData(e.target);

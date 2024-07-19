@@ -21,6 +21,8 @@ import Web3home from "./components/web3/Web3home";
 function App() {
   const dispatch = useDispatch();
 
+
+  // useEffect를 사용하여 최상위 컴포넌트인 App.jsx가 렌더링 될 때 마다 토큰검증을 한다.
   useEffect(() => {
     const checkAuth = async () => {
       try {

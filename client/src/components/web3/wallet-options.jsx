@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useConnect } from 'wagmi';
 
+// RainbowKit이 아니라 wagmi를 사용하여 직접 연결 버튼을 작성하려 하였으나
+// 어디에서 꼬인건지 metamask, trustwallet등이 추가로 나타남
+// useConnect말고 다른거 써서 구현해보기
 export function WalletOptions() {
 	const { connectors, connect } = useConnect();
 

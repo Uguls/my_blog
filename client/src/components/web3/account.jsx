@@ -4,11 +4,16 @@ import { getTransactionCount } from "./Etherscan_API";
 import TransactionsByAddress from "./TransactionsByAddress";
 
 export function Account() {
-	const { address, addresses, chain, status } = useAccount();
-	const { disconnect } = useDisconnect();
+	const {address, addresses, chain, status} = useAccount();
+	const {disconnect} = useDisconnect();
 	const [transactionCount, setTransactionCount] = useState(null);
 	const [showTransactions, setShowTransactions] = useState(false);
 
+	/*
+	 * status와 address가 변경될 때 마다 지갑이 연결되어 있는지, address가 존재하는지를 판단한 후
+	 * getTransactionCount를 사용하여 Transaction의 갯수를 불러온다.
+	 * getTransactionCount는 promise객체를 반환하기 때문에 async와 await을 사용하여 비동기적으로 처리
+	 */
 	useEffect(() => {
 		if (status === 'connected' && address) {
 			const fetchTransactionCount = async () => {
@@ -19,7 +24,8 @@ export function Account() {
 			fetchTransactionCount();
 		}
 	}, [status, address]);
-
+	
+	// 트랜잭션 버튼 토글 함수
 	const handleToggleTransactions = () => {
 		setShowTransactions(prevState => !prevState);
 	};
@@ -46,7 +52,7 @@ export function Account() {
 							</div>
 							<div className={"addresses"}>
 								{addresses?.map((addr, index) => (
-									<AccountBalance key={index} address={addr} />
+									<AccountBalance key={index} address={addr}/>
 								))}
 							</div>
 						</div>
@@ -59,7 +65,7 @@ export function Account() {
 							</button>
 							{showTransactions && (
 								<div className={"transactions"}>
-									<TransactionsByAddress address={address} />
+									<TransactionsByAddress address={address}/>
 								</div>
 							)}
 						</div>
