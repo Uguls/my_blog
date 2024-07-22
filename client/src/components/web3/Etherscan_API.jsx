@@ -46,3 +46,13 @@ export async function getNormalTransactionList(address, startBlock = 0, endBlock
 		return null
 	}
 }
+
+export async function getNFTList(address) {
+	const url =``
+
+	try{
+
+	} catch(e) {
+
+	}
+}

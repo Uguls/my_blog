@@ -1,10 +1,10 @@
 import '../../styles/web3/Home.css'; // CSS 파일 임포트
 import React, { useEffect, useState } from 'react';
-import SendEther from "./SendEther";
+import SendEther from "../../components/web3/SendEther";
 import {useAccount} from "wagmi";
-import {Account} from "./account";
-import {WalletOptions} from "./wallet-options";
+import {Account} from "../../components/web3/account";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import GetToken from "../../components/web3/GetToken";
 
 function ConnectWallet() {
 	const { isConnected } = useAccount();
@@ -21,6 +21,7 @@ const Web3home = () => {
 				<ConnectButton/>
 			</div>
 			<div className={"container"}>
+				<GetToken/>
 				<Account/>
 				<SendEther/>
 			</div>
