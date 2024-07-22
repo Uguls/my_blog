@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getNFTList } from './Etherscan_API';
 import { useAccount, useWriteContract } from 'wagmi';
+import { abi } from '../../abi/abi';
 import '../../styles/web3/GetToken.css'
 
 const GetToken = () => {
@@ -9,6 +10,8 @@ const GetToken = () => {
 	const [selectedNFT, setSelectedNFT] = useState(null);
 	const [transferAddress, setTransferAddress] = useState('');
 	const [error, setError] = useState(null);
+
+	const contractAddress = '0x5E28ab57D09C589ff5C7a2970d911178E97Eab81' // Cool Cats 컨트랙트 주소
 
 	useEffect(() => {
 		const fetchNFTList = async () => {
