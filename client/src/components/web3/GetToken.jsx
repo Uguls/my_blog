@@ -1,55 +1,47 @@
-import React, {useEffect, useState} from 'react';
-import {useAccount, useReadContracts} from "wagmi";
-import CoolCatsABI from '../../abi/coolCats.json'
-
-const contractAddress = '0x5E28ab57D09C589ff5C7a2970d911178E97Eab81'
+import React, { useEffect, useState } from 'react';
+import { getNFTList } from './Etherscan_API';
+import { useAccount } from 'wagmi';
 
 const GetToken = () => {
-	const {address} = useAccount();
-	const [metadata, setMetadata] = useState(null)
-
-	const contact = {
-		address: contractAddress,
-		abi: CoolCatsABI,
-	};
-
-	const {data, isError, isLoading} = useReadContracts({
-		contracts: [
-			{
-				...contact,
-				functionName: 'balanceOf',
-				args: [address]
-			},
-			{
-				...contact,
-				functionName: 'tokenURI',
-				args: [1]
-			}
-		]
-	});
+	const { address } = useAccount();
+	const [nftList, setNftList] = useState([]);
+	const [error, setError] = useState(null);
 
 	useEffect(() => {
-		if (data && data[1].result) {
-			fetch(data[1].result)
-				.then(response => response.json())
-				.then(json => setMetadata(json))
-				.catch(error => console.error('Error: ', error))
-		}
-	}, [data]);
+		const fetchNFTList = async () => {
+			if (address) {
+				try {
+					const list = await getNFTList(address);
+					setNftList(list);
+				} catch (e) {
+					setError('Error fetching NFT list');
+				}
+			}
+		};
 
-	if (isLoading || !metadata) return <div>Loading...</div>;
-	if (isError) return <div>Error occurred!!!</div>
+		fetchNFTList();
+	}, [address]);
 
-	// console.log("data", data)
+	console.log(nftList);
 
 	return (
 		<div>
-			NFT DATA
-			<div>NFT 보유량 : {data[0].result.toString()} 개</div>
-			NFT METADATA
-			<img src={metadata.google_image} alt={metadata.name} />
-			<p>Name: {metadata.name}</p>
-			<p>Description: {metadata.description}></p>
+			<h2>NFT Data</h2>
+			{error && <p>{error}</p>}
+			{nftList.length > 0 ? (
+				<ul>
+					{nftList.map((nft) => (
+						<li key={nft.hash}>
+							<div><strong>Token ID:</strong> {nft.tokenID}</div>
+							<div><strong>Token Name:</strong> {nft.tokenName}</div>
+							<div><strong>Token Symbol:</strong> {nft.tokenSymbol}</div>
+							<div><strong>Timestamp:</strong> {new Date(nft.timeStamp * 1000).toLocaleString()}</div>
+						</li>
+					))}
+				</ul>
+			) : (
+				<p>No NFT transfers found</p>
+			)}
 		</div>
 	);
 };

@@ -47,12 +47,18 @@ export async function getNormalTransactionList(address, startBlock = 0, endBlock
 	}
 }
 
-export async function getNFTList(address) {
-	const url =``
-
-	try{
-
-	} catch(e) {
-
+/*
+이더스캔 API를 사용하여 주소에서 발생한 ERC-721 토큰 이동 이벤트 목록을 반환하는 함수
+비동기로 처리 후 promise 객체를 반환하여 호출하는 컴포넌트에서 비동기로 처리
+ */
+export async function getNFTList(address, page = 1, offset = 100, startBlock = 0, endBlock = 99999999, sort = 'asc') {
+	const url = `https://api-sepolia.etherscan.io/api?module=account&action=tokennfttx&address=${address}&page=${page}&offset=${offset}&startblock=${startBlock}&endblock=${endBlock}&sort=${sort}&apikey=${apiKey}`;
+	try {
+		const res = await axios.get(url);
+		const nftTransfers = res.data.result;
+		return nftTransfers;
+	} catch (e) {
+		console.error('Error fetching NFT transfer events:', e);
+		return null;
 	}
 }
