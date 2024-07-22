@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { getNFTList } from './Etherscan_API';
-import { useAccount } from 'wagmi';
+import { useAccount, useWriteContract } from 'wagmi';
+import '../../styles/web3/GetToken.css'
 
 const GetToken = () => {
 	const { address } = useAccount();
 	const [nftList, setNftList] = useState([]);
+	const [selectedNFT, setSelectedNFT] = useState(null);
+	const [transferAddress, setTransferAddress] = useState('');
 	const [error, setError] = useState(null);
 
 	useEffect(() => {
@@ -14,7 +17,7 @@ const GetToken = () => {
 					const list = await getNFTList(address);
 					setNftList(list);
 				} catch (e) {
-					setError('Error fetching NFT list');
+					console.error('Error fetching NFT list', e);
 				}
 			}
 		};
@@ -22,20 +25,45 @@ const GetToken = () => {
 		fetchNFTList();
 	}, [address]);
 
-	console.log(nftList);
+	const handleTransferClick = (nft) => {
+		setSelectedNFT(nft);
+	};
+
+	const handleCancel = () => {
+		setSelectedNFT(null);
+		setTransferAddress('');
+	};
 
 	return (
 		<div>
 			<h2>NFT Data</h2>
-			{error && <p>{error}</p>}
 			{nftList.length > 0 ? (
 				<ul>
 					{nftList.map((nft) => (
-						<li key={nft.hash}>
+						<li key={`${nft.tokenID}-${nft.hash}`}>
 							<div><strong>Token ID:</strong> {nft.tokenID}</div>
 							<div><strong>Token Name:</strong> {nft.tokenName}</div>
 							<div><strong>Token Symbol:</strong> {nft.tokenSymbol}</div>
 							<div><strong>Timestamp:</strong> {new Date(nft.timeStamp * 1000).toLocaleString()}</div>
+							{selectedNFT && selectedNFT.tokenID === nft.tokenID && selectedNFT.hash === nft.hash ? (
+								<div>
+									<input
+										className={"nft_input"}
+										type="text"
+										placeholder="Recipient Address"
+										value={transferAddress}
+										onChange={(e) => setTransferAddress(e.target.value)}
+									/>
+									<p>
+										<button className={"nft_send"}>전송</button>
+									</p>
+									<p>
+									<button className={"nft_send"} onClick={handleCancel}>취소</button>
+									</p>
+								</div>
+							) : (
+								<button className={"nft_send"} onClick={() => handleTransferClick(nft)}>NFT 전송</button>
+							)}
 						</li>
 					))}
 				</ul>
