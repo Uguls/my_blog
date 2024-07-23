@@ -4,6 +4,9 @@ import { useAccount } from 'wagmi';
 import useNFTTransfer from "./NFTTransfer";
 import '../../styles/web3/GetToken.css';
 
+import GetNFTMetadata from "./GetNFTMetadata";
+import NFTTransferModal from "../modal/NFTTransferModal";
+
 const GetToken = () => {
 	const { address } = useAccount();
 	const [nftList, setNftList] = useState([]);
@@ -30,6 +33,7 @@ const GetToken = () => {
 	}, [address]);
 
 	const handleTransferClick = (nft) => {
+		// NFT 전송버튼에서 인자로 전달받은 nft객체를 selectedNFT에 할당
 		setSelectedNFT(nft);
 	};
 
@@ -38,6 +42,8 @@ const GetToken = () => {
 		setTransferAddress('');
 	};
 
+	// 전송버튼을 누르면 handleTransferClick에서 selectedNFT에 할당한 객체를 사용하여
+	// transferNFT에 인수로 전달
 	const handleTransfer = async () => {
 		if (selectedNFT && transferAddress) {
 			// console.log("selectedNFT : ", selectedNFT)
@@ -53,7 +59,7 @@ const GetToken = () => {
 		}
 	};
 
-	console.log("nftList : ", nftList)
+	// console.log("nftList : ", nftList)
 
 	return (
 		<div className={"block"}>
@@ -61,10 +67,10 @@ const GetToken = () => {
 			{nftList.length > 0 ? (
 				<ul>
 					{nftList.map((nft) => (
+						// nft.tokenId-nft.hash는 고유
 						<div key={`${nft.tokenID}-${nft.hash}`}>
 							<div><strong>Token ID:</strong> {nft.tokenID}</div>
 							<div><strong>Token Name:</strong> {nft.tokenName}</div>
-							<div><strong>Timestamp:</strong> {new Date(nft.timeStamp * 1000).toLocaleString()}</div>
 							{selectedNFT && selectedNFT.tokenID === nft.tokenID && selectedNFT.hash === nft.hash ? (
 								<div>
 									<input
@@ -82,6 +88,7 @@ const GetToken = () => {
 									</p>
 								</div>
 							) : (
+								// handleTransferClick에 nft를 인수로 전달
 								<button className="nft_send" onClick={() => handleTransferClick(nft)}>NFT 전송</button>
 							)}
 						</div>

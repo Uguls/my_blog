@@ -4,7 +4,7 @@ import SendEther from "../../components/web3/SendEther";
 import {useAccount} from "wagmi";
 import {Account} from "../../components/web3/account";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import GetToken from "../../components/web3/GetToken";
+import GetNFTMetadata from "../../components/web3/GetNFTMetadata";
 
 function ConnectWallet() {
 	const { isConnected } = useAccount();
@@ -21,8 +21,8 @@ const Web3home = () => {
 				<ConnectButton/>
 			</div>
 			<div className={"container"}>
+				{/*<GetNFTMetadata/>*/}
 				<Account/>
-				{/*<GetToken/>*/}
 				<SendEther/>
 			</div>
 		</div>
