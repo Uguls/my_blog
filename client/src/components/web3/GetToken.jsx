@@ -56,15 +56,14 @@ const GetToken = () => {
 	console.log("nftList : ", nftList)
 
 	return (
-		<div>
-			<h2>NFT Data</h2>
+		<div className={"block"}>
+			<div className={"title"}>NFT List</div>
 			{nftList.length > 0 ? (
 				<ul>
 					{nftList.map((nft) => (
-						<li key={`${nft.tokenID}-${nft.hash}`}>
+						<div key={`${nft.tokenID}-${nft.hash}`}>
 							<div><strong>Token ID:</strong> {nft.tokenID}</div>
 							<div><strong>Token Name:</strong> {nft.tokenName}</div>
-							<div><strong>Token Symbol:</strong> {nft.tokenSymbol}</div>
 							<div><strong>Timestamp:</strong> {new Date(nft.timeStamp * 1000).toLocaleString()}</div>
 							{selectedNFT && selectedNFT.tokenID === nft.tokenID && selectedNFT.hash === nft.hash ? (
 								<div>
@@ -85,7 +84,7 @@ const GetToken = () => {
 							) : (
 								<button className="nft_send" onClick={() => handleTransferClick(nft)}>NFT 전송</button>
 							)}
-						</li>
+						</div>
 					))}
 				</ul>
 			) : (

@@ -75,8 +75,8 @@
     font-size: 40px;
     font-weight: bold;
     margin-bottom: 10px;
-    text-align: center; /* 텍스트 중앙 정렬 */
-    width: 100%; /* 너비를 100%로 설정 */
+    text-align: center;
+    width: 100%;
 }
 
 .Account_Info .Info {

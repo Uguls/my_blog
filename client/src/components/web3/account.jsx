@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAccount, useDisconnect, useBalance } from 'wagmi';
 import { getTransactionCount } from "./Etherscan_API";
 import TransactionsByAddress from "./TransactionsByAddress";
+import GetToken from "./GetToken";
 
 export function Account() {
 	const {address, addresses, chain, status} = useAccount();
@@ -69,6 +70,7 @@ export function Account() {
 								</div>
 							)}
 						</div>
+						<GetToken/>
 					</>
 				)}
 				{status === 'disconnected' && (

@@ -21,8 +21,8 @@ const Web3home = () => {
 				<ConnectButton/>
 			</div>
 			<div className={"container"}>
-				<GetToken/>
 				<Account/>
+				{/*<GetToken/>*/}
 				<SendEther/>
 			</div>
 		</div>
