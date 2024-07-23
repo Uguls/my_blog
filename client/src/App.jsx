@@ -16,7 +16,7 @@ import Login from "./pages/Auth/Login/Login";
 import Register from "./pages/Auth/Register/Register";
 import Notfound from "./pages/Diary/Notfound";
 import EditProfile from "./pages/EditProfile/EditProfile";
-import Web3home from "./components/web3/Web3home";
+import Web3home from "./pages/web3/Web3home";
 
 function App() {
   const dispatch = useDispatch();

@@ -46,3 +46,52 @@ export async function getNormalTransactionList(address, startBlock = 0, endBlock
 		return null
 	}
 }
+
+/*
+이더스캔 API를 사용하여 주소에서 발생한 ERC-721 토큰 이동 이벤트 목록을 반환하는 함수
+비동기로 처리 후 promise 객체를 반환하여 호출하는 컴포넌트에서 비동기로 처리
+ */
+export async function getNFTList(address, page = 1, offset = 100, startBlock = 0, endBlock = 99999999, sort = 'asc') {
+	const url = `https://api-sepolia.etherscan.io/api?module=account&action=tokennfttx&address=${address}&page=${page}&offset=${offset}&startblock=${startBlock}&endblock=${endBlock}&sort=${sort}&apikey=${apiKey}`;
+	try {
+		const res = await axios.get(url);
+		const nftTransfers = res.data.result;
+
+		// console.log(nftTransfers)
+
+		// to가 현재 지갑주소인것만 filter
+		const ownedNFT = new Map();
+
+		// to가 현재 지갑주소인 것들을 filter한 후
+		// from이 현재 지갑주소 즉 다른주소로 넘긴것들을 제거(판매 등)
+		nftTransfers.forEach(transfer => {
+			const { tokenID, from, to, contractAddress } = transfer;
+			if (to.toLowerCase() === address.toLowerCase()) {
+				ownedNFT.set(`${contractAddress}-${tokenID}`, transfer);
+			} else if (from.toLowerCase() === address.toLowerCase()) {
+				ownedNFT.delete(`${contractAddress}-${tokenID}`);
+			}
+		});
+
+		// // tokenID별로 그룹화하고, 각 그룹에서 가장 최근의 timestamp를 가진 항목을 선택
+		// const nftMap = new Map();
+		//
+		// ownedNFT.forEach(transfer => {
+		// 	const { tokenID, timeStamp } = transfer;
+		// 	if (!nftMap.has(tokenID) || nftMap.get(tokenID).timeStamp < timeStamp) {
+		// 		nftMap.set(tokenID, transfer);
+		// 	}
+		// });
+
+		// Map의 값들을 배열로 변환하여 반환
+		// const latestNFTTransfers = Array.from(nftMap.values());
+
+		// 필터링을 거친 Map객체를 Array로 변환후 반환
+		const latestNFTTransfers = Array.from(ownedNFT.values());
+
+		return latestNFTTransfers;
+	} catch (e) {
+		console.error('Error fetching NFT transfer events:', e);
+		return null;
+	}
+}
