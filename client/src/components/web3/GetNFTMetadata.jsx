@@ -3,7 +3,7 @@ import { useReadContract } from 'wagmi';
 import axios from 'axios';
 import abi from '../../abi/ERC721_ABI.json';
 
-const GetNftMetadata = (tokenID) => {
+const GetNftMetadata = ({tokenID}) => {
 	const [metadata, setMetadata] = useState(null);
 	const [isMetadataLoading, setIsMetadataLoading] = useState(false);
 	const [metadataError, setMetadataError] = useState(null);
@@ -15,7 +15,7 @@ const GetNftMetadata = (tokenID) => {
 		abi,
 		address: contractAddress,
 		functionName: 'tokenURI',
-		args: [tokenId]
+		args: [tokenID]
 	});
 
 	useEffect(() => {
@@ -35,6 +35,8 @@ const GetNftMetadata = (tokenID) => {
 			fetchMetadata();
 		}
 	}, [tokenURI]);
+
+	// console.log(metadata)
 
 	if (isTokenURILoading || isMetadataLoading) return <p>Loading...</p>;
 	if (isTokenURIError) return <p>Error loading token URI</p>;
