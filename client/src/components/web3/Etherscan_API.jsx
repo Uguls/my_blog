@@ -56,7 +56,24 @@ export async function getNFTList(address, page = 1, offset = 100, startBlock = 0
 	try {
 		const res = await axios.get(url);
 		const nftTransfers = res.data.result;
-		return nftTransfers;
+
+		// to가 현재 지갑주소인것만 filter
+		const ownedNFTs = nftTransfers.filter(transfer => transfer.to.toLowerCase() === address.toLowerCase())
+
+		// tokenID별로 그룹화하고, 각 그룹에서 가장 최근의 timestamp를 가진 항목을 선택
+		const nftMap = new Map();
+
+		ownedNFTs.forEach(transfer => {
+			const { tokenID, timeStamp } = transfer;
+			if (!nftMap.has(tokenID) || nftMap.get(tokenID).timeStamp < timeStamp) {
+				nftMap.set(tokenID, transfer);
+			}
+		});
+
+		// Map의 값들을 배열로 변환하여 반환
+		const latestNFTTransfers = Array.from(nftMap.values());
+
+		return latestNFTTransfers;
 	} catch (e) {
 		console.error('Error fetching NFT transfer events:', e);
 		return null;

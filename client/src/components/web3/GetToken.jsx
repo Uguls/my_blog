@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { getNFTList } from './Etherscan_API';
-import { useAccount, useWriteContract } from 'wagmi';
-import { abi } from '../../abi/abi';
-import '../../styles/web3/GetToken.css'
+import { useAccount } from 'wagmi';
+import useNFTTransfer from "./NFTTransfer";
+import '../../styles/web3/GetToken.css';
 
 const GetToken = () => {
 	const { address } = useAccount();
@@ -11,7 +11,8 @@ const GetToken = () => {
 	const [transferAddress, setTransferAddress] = useState('');
 	const [error, setError] = useState(null);
 
-	const contractAddress = '0x5E28ab57D09C589ff5C7a2970d911178E97Eab81' // Cool Cats 컨트랙트 주소
+	// const contractAddress = '0x5E28ab57D09C589ff5C7a2970d911178E97Eab81'; // Cool Cats 컨트랙트 주소
+	const { transferNFT } = useNFTTransfer();
 
 	useEffect(() => {
 		const fetchNFTList = async () => {
@@ -37,6 +38,23 @@ const GetToken = () => {
 		setTransferAddress('');
 	};
 
+	const handleTransfer = async () => {
+		if (selectedNFT && transferAddress) {
+			// console.log("selectedNFT : ", selectedNFT)
+			const result = await transferNFT(selectedNFT.contractAddress, address, transferAddress, selectedNFT.tokenID);
+			if (result.success) {
+				alert('NFT 전송 요청이 완료되었습니다. Metamask에서 컨펌을 눌러주세요');
+				handleCancel();
+			} else {
+				setError(result.error);
+			}
+		} else {
+			alert('Recipient Address를 입력해주세요.');
+		}
+	};
+
+	console.log("nftList : ", nftList)
+
 	return (
 		<div>
 			<h2>NFT Data</h2>
@@ -51,21 +69,21 @@ const GetToken = () => {
 							{selectedNFT && selectedNFT.tokenID === nft.tokenID && selectedNFT.hash === nft.hash ? (
 								<div>
 									<input
-										className={"nft_input"}
+										className="nft_input"
 										type="text"
 										placeholder="Recipient Address"
 										value={transferAddress}
 										onChange={(e) => setTransferAddress(e.target.value)}
 									/>
 									<p>
-										<button className={"nft_send"}>전송</button>
+										<button className="nft_send" onClick={handleTransfer}>전송</button>
 									</p>
 									<p>
-									<button className={"nft_send"} onClick={handleCancel}>취소</button>
+										<button className="nft_send" onClick={handleCancel}>취소</button>
 									</p>
 								</div>
 							) : (
-								<button className={"nft_send"} onClick={() => handleTransferClick(nft)}>NFT 전송</button>
+								<button className="nft_send" onClick={() => handleTransferClick(nft)}>NFT 전송</button>
 							)}
 						</li>
 					))}
@@ -73,6 +91,7 @@ const GetToken = () => {
 			) : (
 				<p>No NFT transfers found</p>
 			)}
+			{error && <p className="error">Error: {error.message}</p>}
 		</div>
 	);
 };

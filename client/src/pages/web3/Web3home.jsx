@@ -5,7 +5,7 @@ import {useAccount} from "wagmi";
 import {Account} from "../../components/web3/account";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import GetToken from "../../components/web3/GetToken";
-import TestNftTransfer from "../../components/web3/Test_NFTTransfer";
+
 function ConnectWallet() {
 	const { isConnected } = useAccount();
 	if (isConnected) return <Account />
@@ -21,7 +21,6 @@ const Web3home = () => {
 				<ConnectButton/>
 			</div>
 			<div className={"container"}>
-				<TestNftTransfer/>
 				<GetToken/>
 				<Account/>
 				<SendEther/>
