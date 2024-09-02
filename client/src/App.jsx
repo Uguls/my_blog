@@ -1,14 +1,16 @@
 import "./App.css";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {BrowserRouter as Router, Route, Routes, useLocation} from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setLogin, logout } from "./store/store";
 import {jwtDecode} from 'jwt-decode';
 import axiosInstance from "./util/axiosInstance";
+import ReactGA from 'react-ga4'
 
 // 컴포넌트 임포트
 import Navbar from "./components/Navbar";
 import DiaryRoutes from "./components/Diary/DiaryRoutes";
+
 // 페이지 임포트
 import Main from "./pages/main";
 import Todo from "./pages/Todo/Todo";
@@ -16,11 +18,23 @@ import Login from "./pages/Auth/Login/Login";
 import Register from "./pages/Auth/Register/Register";
 import Notfound from "./pages/Diary/Notfound";
 import EditProfile from "./pages/EditProfile/EditProfile";
-import Web3home from "./pages/web3/Web3home";
+
+const Analytics = (location) => {
+  useEffect(() => {
+    ReactGA.set({page: location.pathname});
+    ReactGA.send('pageview')
+    return;
+  }, [location]);
+};
 
 function App() {
+  const location = useLocation();
+  console.log("location : ", location)
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    ReactGA.initialize(import.meta.env.VITE_GA_ID)
+  }, []);
 
   // useEffect를 사용하여 최상위 컴포넌트인 App.jsx가 렌더링 될 때 마다 토큰검증을 한다.
   useEffect(() => {
@@ -59,6 +73,8 @@ function App() {
     checkAuth();
   }, [dispatch]);
 
+  Analytics(location);
+
   return (
     <div className="App">
       <Navbar />
@@ -69,7 +85,6 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/editprofile" element={<EditProfile />} />
-        <Route path="/web3" element={<Web3home/>} />
         <Route path="*" element={<Notfound />} />
       </Routes>
     </div>
