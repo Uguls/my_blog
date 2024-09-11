@@ -20,8 +20,6 @@ import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { Link as RouterLink } from "react-router-dom";
 import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import axiosInstance from "../util/axiosInstance";
-import {logout} from "../store/store";
 
 const Links = ["Todo", "Diary", "web3"];
 
@@ -45,19 +43,6 @@ export default function Navbar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const nav = useNavigate();
   const dispatch = useDispatch();
-  const { isAuthenticated } = useSelector((state) => state.login);
-
-  const handleLogout = async () => {
-    try {
-      await axiosInstance.post('/auth/logout')
-      window.alert("로그아웃을 하시겠습니까?")
-      dispatch(logout())
-      nav("/",{replace:true})
-    } catch (error){
-      console.error("로그아웃 중 문제가 발생했습니다.", error)
-    }
-  };
-
 
   return (
     <>
@@ -98,18 +83,7 @@ export default function Navbar() {
                 <Avatar size={"sm"} src={"../assets/person.jpg"} />
               </MenuButton>
               <MenuList>
-                {isAuthenticated ? (
-                  <MenuItem onClick={()=>nav("/editprofile")}>회원정보 수정</MenuItem>
-                ) : (<></>)
-                }
-                <MenuDivider />
-                {isAuthenticated ? (
-                  <MenuItem onClick={handleLogout}>로그아웃</MenuItem>
-                ) : (
-                  <>
-                    <MenuItem onClick={()=>nav("/login")}>로그인 / 회원가입</MenuItem>
-                  </>
-                )}
+
               </MenuList>
             </Menu>
           </Flex>

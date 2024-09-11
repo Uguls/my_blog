@@ -1,6 +1,4 @@
-import { createStore, combineReducers } from "redux";
-import { jwtDecode } from 'jwt-decode';
-import {configureStore, createSlice} from "@reduxjs/toolkit";
+import { configureStore, createSlice } from "@reduxjs/toolkit";
 
 // 로컬 스토리지에 상태 저장
 const saveStateToLocalStorage = (state) => {
@@ -24,21 +22,9 @@ const loadStateFromLocalStorage = () => {
   }
 };
 
-// JWT를 쿠키에서 가져오기
-const getCookie = (name) => {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop().split(';').shift();
-};
-
 // 초기 상태
 const initialDiaryState = [];
 const initialTodoState = [];
-const initialLoginState = {
-  isAuthenticated: false,
-  user: null,
-  isAdmin: false,
-};
 
 // 다이어리 Slice 정의
 const diarySlice = createSlice({
@@ -52,7 +38,7 @@ const diarySlice = createSlice({
       state.unshift(action.payload);
     },
     updateDiary(state, action) {
-      console.log(action.payload)
+      console.log(action.payload);
       return state.map((item) => String(item.id) === String(action.payload.id) ? action.payload : item);
     },
     deleteDiary(state, action) {
@@ -85,21 +71,6 @@ const todoSlice = createSlice({
   },
 });
 
-// 로그인 Slice 정의
-const loginSlice = createSlice({
-  name: 'login',
-  initialState: initialLoginState,
-  reducers: {
-    setLogin(state, action) {
-      state.isAuthenticated = true;
-      state.isAdmin = action.payload;
-    },
-    logout(state) {
-      return initialLoginState;
-    },
-  },
-});
-
 // 액션 추출
 export const {
   initDiary, createDiary, updateDiary, deleteDiary
@@ -109,30 +80,14 @@ export const {
   initTodo, createTodo, updateTodo, deleteTodo
 } = todoSlice.actions;
 
-export const {
-  setLogin, logout
-} = loginSlice.actions;
-
-// 로컬 스토리지에서 초기 상태 불러오기 및 JWT 디코딩
+// 로컬 스토리지에서 초기 상태 불러오기
 const persistedState = loadStateFromLocalStorage() || {};
-const token = getCookie('jwt');
-
-if (token) {
-  const decoded = jwtDecode(token);
-  persistedState.login = {
-    isAuthenticated: true,
-    user: { id: decoded.id, email: decoded.email },
-    isAdmin: decoded.role === 'admin',
-  };
-}
-
 
 // 리덕스 스토어 생성
 const store = configureStore({
   reducer: {
     diary: diarySlice.reducer,
     todo: todoSlice.reducer,
-    login: loginSlice.reducer,
   },
   preloadedState: persistedState,
 });
