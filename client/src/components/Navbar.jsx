@@ -21,7 +21,7 @@ import { Link as RouterLink } from "react-router-dom";
 import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 
-const Links = ["Todo", "Diary", "web3"];
+const Links = ["Todo", "Diary"];
 
 const NavLink = ({ children }) => (
   <ChakraLink
