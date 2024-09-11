@@ -8,8 +8,6 @@ import Projects from "../components/Main/Projects";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Button } from "@chakra-ui/react";
-import {logout} from "../store/store";
-import axiosInstance from "../util/axiosInstance";
 
 const Main = () => {
   const nav = useNavigate();
