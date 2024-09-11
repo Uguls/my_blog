@@ -2,8 +2,6 @@ import "./App.css";
 import {BrowserRouter as Router, Route, Routes, useLocation} from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import {jwtDecode} from 'jwt-decode';
-import ReactGA from 'react-ga4'
 
 // 컴포넌트 임포트
 import Navbar from "./components/Navbar";
