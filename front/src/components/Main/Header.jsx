@@ -6,8 +6,8 @@ const Header = () => {
 			<section className={"intro"}>
 				<div className={"intro__dark"}>
 					<div className={"intro__type"}>
-						<div><span aria-hidden={true}>😎</span> 억울한</div>
-						<div>Uguls<span className={"underscore"}>_</span></div>
+						<div><span aria-hidden={true}>😎</span> HyungWoo's</div>
+						<div>Page<span className={"underscore"}>_</span></div>
 					</div>
 				</div>
 				<div className={"intro__tilt"}></div>

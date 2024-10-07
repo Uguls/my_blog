@@ -58,7 +58,7 @@ export default function Navbar() {
           <HStack spacing={8} alignItems={"center"}>
             <Box>
               <ChakraLink as={RouterLink} to={"/"}>
-                Uguls' Blog
+                HyungWoo
               </ChakraLink>
             </Box>
             <HStack

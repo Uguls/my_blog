@@ -4,10 +4,9 @@ import "../styles/Main/Main.css"
 import Header from "../components/Main/Header";
 import TechStack from "../components/Main/TechStack";
 import Projects from "../components/Main/Projects";
+import AboutMe from "../components/Main/AboutMe";
 
 import { useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { Button } from "@chakra-ui/react";
 
 const Main = () => {
   const nav = useNavigate();
@@ -15,6 +14,7 @@ const Main = () => {
   return (
     <>
       <Header />
+      <AboutMe />
       <TechStack />
       <Projects />
     </>
