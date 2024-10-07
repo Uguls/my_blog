@@ -1,5 +1,3 @@
-process.env.NODE_ENV = (process.env.NODE_ENV && (process.env.NODE_ENV).trim().toLowerCase() == 'production') ? 'production' : 'development';
-
 const express = require('express');
 const http = require('http');
 const https = require('https');
@@ -20,6 +18,8 @@ const {swaggerUi, specs} = require("./src/swagger");
 const User = require('./models/user');
 const bcrypt = require('bcrypt');
 const {Op} = require('sequelize');
+
+process.env.NODE_ENV = (process.env.NODE_ENV && (process.env.NODE_ENV).trim().toLowerCase() == 'production') ? 'production' : 'development';
 
 try {
 	fs.readdirSync('uploads');
@@ -73,39 +73,8 @@ app.use(passport.session());
 app.use('/auth', authRouter);
 app.use('/post', postsRouter);
 
-let server;
-if (process.env.NODE_ENV == 'production') {
-	console.log("NODE_ENV: ", process.env.NODE_ENV);
-	const options = {
-		cert: fs.readFileSync('/workspace/cardano-explore/.cert/cardano_kr.crt'),
-		key: fs.readFileSync('/workspace/cardano-explore/.cert/cardano_kr_SHA256WITHRSA.key')
-	};
-	server = https.createServer(options, app);
-} else {
-	console.log("NODE_ENV: ", process.env.NODE_ENV);
-	server = http.createServer(app);
-}
+const server = http.createServer(app);
+
 server.listen(app.get('port'), async () => {
-	console.log(app.get('port'), '번 포트에서 대기중');
-	if (process.env.NODE_ENV == 'development') {
-		try {
-			const adminExists = await User.findOne({where: {role: 'admin'}});
-			if (!adminExists) {
-				const hashedPassword = await bcrypt.hash('admin', 12);
-				await User.create({
-					email: 'admin@admin.admin',
-					password: hashedPassword,
-					nick: 'admin',
-					role: 'admin',
-					changePasswordToken: undefined,
-					changePasswordExpires: undefined,
-				})
-				console.log('관리자 계정 생성 완료');
-			} else {
-				console.log('관리자 계정이 이미 존재합니다.');
-			}
-		} catch (error) {
-			console.error(error);
-		}
-	}
+console.log(app.get('port'), '번 포트에서 대기중');
 });
